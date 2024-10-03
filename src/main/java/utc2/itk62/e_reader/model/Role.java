@@ -1,14 +1,12 @@
 package utc2.itk62.e_reader.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Builder
@@ -16,11 +14,16 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
     private String description;
+
+    private LocalDate createAt;
+    private LocalDate updateAt;
 
     @ManyToMany
     private Set<Permission> permissions;
