@@ -14,15 +14,9 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "permissions")
-public class Permission {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Permission extends BaseEntity {
+
     private String name;
     private String description;
-
-    private LocalDate createAt;
-    private LocalDate updateAt;
-
 
 }
