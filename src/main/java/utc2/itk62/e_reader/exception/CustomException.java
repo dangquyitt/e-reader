@@ -9,9 +9,8 @@ import java.util.List;
 @Getter
 public class CustomException extends RuntimeException{
     private int status;
-    // TODO: hide this field when response to client. Just log ex to debug
-    private Exception exception;
     private List<Error> errors;
+    private Exception exception;
 
     public CustomException addError(Error error){
         if(this.errors == null){

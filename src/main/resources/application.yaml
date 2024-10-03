@@ -9,6 +9,9 @@ spring:
     url: jdbc:postgresql://localhost:5433/e-reader
     username: postgres
     password: postgres
+  messages:
+    basename: i18n/messages
+    encoding: ISO-8859-1
 logging:
   level:
     sql: debug

@@ -12,4 +12,9 @@ public class UserService implements IUserService {
     public UserService(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    @Override
+    public Long createUser(User u) {
+        return userRepository.save(u).getId();
+    }
 }

@@ -1,15 +1,19 @@
 package utc2.itk62.e_reader.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import utc2.itk62.e_reader.core.error.Error;
-import utc2.itk62.e_reader.exception.CustomException;
+import utc2.itk62.e_reader.core.response.HTTPResponse;
+import utc2.itk62.e_reader.dto.CreateUserRequest;
+import utc2.itk62.e_reader.model.User;
 import utc2.itk62.e_reader.service.IUserService;
 
-import java.util.ArrayList;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
     private final IUserService userService;
 
@@ -17,13 +21,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/internalEx")
-    public ResponseEntity<Object> testInternalEx() {
-        throw new RuntimeException("testInternalLog");
-    }
-
-    @GetMapping("/customEx")
-    public ResponseEntity<Object> testCustomEx() {
-        throw new CustomException().setStatus(400).addError(new Error("email", "User email is exists"));
+    @PostMapping
+    public ResponseEntity<HTTPResponse> createUser(@Valid @RequestBody CreateUserRequest param) {
+        User u = User.builder().password(param.getPassword()).email(param.getEmail()).build();
+        Long id = userService.createUser(u);
+        return ResponseEntity.status(200).body(new HTTPResponse("success", id));
     }
 }
