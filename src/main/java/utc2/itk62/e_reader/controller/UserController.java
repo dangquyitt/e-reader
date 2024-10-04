@@ -23,8 +23,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<HTTPResponse> createUser(@Valid @RequestBody CreateUserRequest param) {
-        User u = User.builder().password(param.getPassword()).email(param.getEmail()).build();
-        Long id = userService.createUser(u);
-        return ResponseEntity.status(200).body(new HTTPResponse("success", id));
+
+        return ResponseEntity.status(200).body(new HTTPResponse("success", userService.createUser(param)));
     }
 }
