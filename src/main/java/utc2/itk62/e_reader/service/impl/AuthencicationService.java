@@ -2,20 +2,26 @@ package utc2.itk62.e_reader.service.impl;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.core.response.AuthenticationResponse;
+import utc2.itk62.e_reader.core.response.IntrospectResponse;
 import utc2.itk62.e_reader.dto.AuthenticationRequest;
+import utc2.itk62.e_reader.dto.IntrospectRequest;
 import utc2.itk62.e_reader.exception.CustomException;
 import utc2.itk62.e_reader.repository.IUserRepository;
 import utc2.itk62.e_reader.service.IAuthenticationService;
 
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -26,8 +32,10 @@ import java.util.Date;
 public class AuthencicationService implements IAuthenticationService {
 
     private final IUserRepository iUserRepository;
+
     @NonFinal
-    protected static final String SIGNER_KEY = "jYpmvBjb1zSKIJMVDm3mJ0UtDRWCpluI2xzcDzECgnBL2zBl9q1pPnQ5HkP5OeHq";
+    @Value("${jwt.signerKey}")
+    protected String SIGNER_KEY;
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -47,6 +55,21 @@ public class AuthencicationService implements IAuthenticationService {
                 .authenticated(true)
                 .build();
 
+    }
+
+    @Override
+    public IntrospectResponse introspect(IntrospectRequest request)
+            throws JOSEException, ParseException {
+        var token = request.getToken();
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var verified =  signedJWT.verify(verifier);
+
+        return IntrospectResponse.builder()
+                .valid(verified && expiryTime.after(new Date()))
+                .build();
     }
 
     private String generateToken(String username){

@@ -15,3 +15,6 @@ spring:
 logging:
   level:
     sql: debug
+
+jwt:
+  signerKey: "jYpmvBjb1zSKIJMVDm3mJ0UtDRWCpluI2xzcDzECgnBL2zBl9q1pPnQ5HkP5OeHq"
