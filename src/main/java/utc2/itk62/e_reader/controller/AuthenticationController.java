@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import utc2.itk62.e_reader.core.response.AuthenticationResponse;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.dto.AuthenticationRequest;
 import utc2.itk62.e_reader.service.IAuthenticationService;
@@ -20,10 +19,9 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<HTTPResponse> authenticate(@RequestBody AuthenticationRequest request){
-        boolean result =  iAuthenticationService.authenticate(request);
+        var result =  iAuthenticationService.authenticate(request);
         return ResponseEntity.status(200)
-                .body(new HTTPResponse("success", AuthenticationResponse.builder()
-                        .authenticated(result)
-                        .build()));
+                .body(new HTTPResponse("success",result));
+
     }
 }
