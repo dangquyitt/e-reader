@@ -6,21 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.time.LocalDate;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "users")
-public class User extends BaseEntity {
+@Table(name = "permissions")
+public class Permission extends BaseEntity {
 
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String email;
+    private String name;
+    private String description;
 
-    @ManyToMany
-    private Set<Role> roles;
 }
