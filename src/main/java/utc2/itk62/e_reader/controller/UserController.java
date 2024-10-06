@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.RestController;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.dto.CreateUserRequest;
 import utc2.itk62.e_reader.model.User;
-import utc2.itk62.e_reader.service.IUserService;
+import utc2.itk62.e_reader.service.UserService;
 
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final IUserService userService;
+    private final UserService userService;
 
-    public UserController(IUserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public ResponseEntity<HTTPResponse> createUser(@Valid @RequestBody CreateUserRequest param) {
+    public ResponseEntity<HTTPResponse<Long>> createUser(@Valid @RequestBody CreateUserRequest param) {
         User u = User.builder().password(param.getPassword()).email(param.getEmail()).build();
         Long id = userService.createUser(u);
-        return ResponseEntity.status(200).body(new HTTPResponse("success", id));
+        return HTTPResponse.ok(id);
     }
 }
