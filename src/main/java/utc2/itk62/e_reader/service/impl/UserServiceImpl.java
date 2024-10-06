@@ -2,14 +2,13 @@ package utc2.itk62.e_reader.service.impl;
 
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.model.User;
-import utc2.itk62.e_reader.repository.IUserRepository;
-import utc2.itk62.e_reader.service.IUserService;
+import utc2.itk62.e_reader.repository.UserRepository;
 
 @Service
-public class UserService implements IUserService {
-    private final IUserRepository userRepository;
+public class UserServiceImpl implements utc2.itk62.e_reader.service.UserService {
+    private final UserRepository userRepository;
 
-    public UserService(IUserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
