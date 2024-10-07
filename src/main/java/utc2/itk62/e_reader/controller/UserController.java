@@ -21,9 +21,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<HTTPResponse> createUser(@Valid @RequestBody CreateUserRequest param) {
-
-        return ResponseEntity.status(200).body(new HTTPResponse("success", userService.createUser(param)));
-    }
+//    @PostMapping
+//    public ResponseEntity<HTTPResponse> createUser(@Valid @RequestBody CreateUserRequest param) {
+//        return HTTPResponse
+//    }
 }

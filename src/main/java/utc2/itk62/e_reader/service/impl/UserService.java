@@ -16,8 +16,11 @@ import java.time.LocalDateTime;
 public class UserService implements IUserService {
     private final IUserRepository userRepository;
 
-    public UserService(IUserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -25,10 +28,9 @@ public class UserService implements IUserService {
         if(userRepository.existsByEmail(request.getEmail()))
             throw new CustomException()
                     .setStatus(404)
-                    .addError(new Error("email","User existed with email: " + request.getEmail()));
+                    .addError(new Error("email","user.email.existed"));
         User user = new User();
         user.setEmail(request.getEmail());
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());

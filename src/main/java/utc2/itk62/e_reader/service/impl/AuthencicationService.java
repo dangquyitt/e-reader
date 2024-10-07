@@ -13,8 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.error.Error;
-import utc2.itk62.e_reader.core.response.AuthenticationResponse;
-import utc2.itk62.e_reader.core.response.IntrospectResponse;
+import utc2.itk62.e_reader.dto.AuthenticationResponse;
+import utc2.itk62.e_reader.dto.IntrospectResponse;
 import utc2.itk62.e_reader.dto.AuthenticationRequest;
 import utc2.itk62.e_reader.dto.IntrospectRequest;
 import utc2.itk62.e_reader.exception.CustomException;
@@ -39,16 +39,17 @@ public class AuthencicationService implements IAuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var user = iUserRepository.findByEmail(request.getUsername())
+        var user = iUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new CustomException().setStatus(404)
-                        .addError(new Error("username","user not existed")));
-
+                        .addError(new Error("email","user.email.notfound")));
+        log.info(user.getEmail());
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if(!authenticated)
-            throw new CustomException().setStatus(401).addError(new Error("Unauthenticated","Unauthenticated"));
+            throw new CustomException().setStatus(401).addError(
+                    new Error("password","user.password.unauthenticated"));
 
-        var token = generateToken(request.getUsername());
+        var token = generateToken(request.getEmail());
 
         return AuthenticationResponse.builder()
                 .token(token)

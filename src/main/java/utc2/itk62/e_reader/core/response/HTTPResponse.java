@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class HTTPResponse {
+public class HTTPResponse<T> {
     private String message;
     private Object data;
+
+    public static  <T> HTTPResponse<T> ok(T body) {
+        return new HTTPResponse<T>("success", body);
+    }
 }
 
 

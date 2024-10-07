@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.core.response;
+package utc2.itk62.e_reader.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

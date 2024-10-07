@@ -23,6 +23,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<HTTPResponse> authenticate(@RequestBody AuthenticationRequest request){
+        ResponseEntity.ok("asd");
         var result = iAuthenticationService.authenticate(request);
         return ResponseEntity.status(200)
                 .body(new HTTPResponse("success",result));
