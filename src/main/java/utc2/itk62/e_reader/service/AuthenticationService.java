@@ -8,7 +8,7 @@ import utc2.itk62.e_reader.dto.IntrospectRequest;
 
 import java.text.ParseException;
 
-public interface IAuthenticationService {
+public interface AuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest request);
     IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
 }

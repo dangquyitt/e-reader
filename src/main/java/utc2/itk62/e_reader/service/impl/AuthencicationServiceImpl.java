@@ -13,13 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.error.Error;
-import utc2.itk62.e_reader.dto.AuthenticationResponse;
-import utc2.itk62.e_reader.dto.IntrospectResponse;
 import utc2.itk62.e_reader.dto.AuthenticationRequest;
+import utc2.itk62.e_reader.dto.AuthenticationResponse;
 import utc2.itk62.e_reader.dto.IntrospectRequest;
+import utc2.itk62.e_reader.dto.IntrospectResponse;
 import utc2.itk62.e_reader.exception.CustomException;
-import utc2.itk62.e_reader.repository.IUserRepository;
-import utc2.itk62.e_reader.service.IAuthenticationService;
+import utc2.itk62.e_reader.repository.UserRepository;
+import utc2.itk62.e_reader.service.AuthenticationService;
 
 import java.text.ParseException;
 import java.time.Duration;
@@ -29,9 +29,9 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuthencicationService implements IAuthenticationService {
+public class AuthencicationServiceImpl implements AuthenticationService {
 
-    private final IUserRepository iUserRepository;
+    private final UserRepository userRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -39,7 +39,7 @@ public class AuthencicationService implements IAuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var user = iUserRepository.findByEmail(request.getEmail())
+        var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new CustomException().setStatus(404)
                         .addError(new Error("email","user.email.notfound")));
         log.info(user.getEmail());
