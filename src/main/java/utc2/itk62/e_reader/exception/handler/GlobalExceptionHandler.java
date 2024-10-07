@@ -10,7 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import utc2.itk62.e_reader.core.error.Error;
-import utc2.itk62.e_reader.core.response.HTTPResponse;
+import utc2.itk62.e_reader.core.response.ErrorResponse;
 import utc2.itk62.e_reader.exception.CustomException;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class.getName());
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<HTTPResponse> handleCustomException(CustomException ex) {
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
         if(ex.getException() != null) {
             logger.error(ex.getException().getMessage(), ex.getException());
         }
@@ -39,22 +39,22 @@ public class GlobalExceptionHandler {
         ex.getErrors().forEach(error -> {
             errors.add(new Error(error.getField(), messageSource.getMessage(error.getMessage(),null, locale)));
         });
-        return ResponseEntity.status(ex.getStatus()).body(new HTTPResponse("error", errors));
+        return ErrorResponse.badRequest(errors);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<HTTPResponse> handleException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         logger.error(ex.getMessage(), ex);
-        return ResponseEntity.status(500).body(new HTTPResponse("error", "internal server error"));
+        return ErrorResponse.internalServerError();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<HTTPResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<Error> errors = new ArrayList<>();
         Locale locale = LocaleContextHolder.getLocale();
         for(FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.add(new Error(fieldError.getField(), messageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale)));
         }
-        return ResponseEntity.status(400).body(new HTTPResponse("error", errors));
+        return ErrorResponse.badRequest(errors);
     }
 }
