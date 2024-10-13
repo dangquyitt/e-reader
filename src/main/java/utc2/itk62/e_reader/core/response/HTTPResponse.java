@@ -1,5 +1,6 @@
 package utc2.itk62.e_reader.core.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HTTPResponse<T> {
     private T data;
+
     private Pagination pagination;
     public static <T> ResponseEntity<HTTPResponse<T>> ok(T data) {
         return ResponseEntity.status(HttpStatus.OK).body(new HTTPResponse<>(data, null));

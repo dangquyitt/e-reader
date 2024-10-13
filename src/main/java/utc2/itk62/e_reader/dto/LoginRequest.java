@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateUserRequest {
+public class LoginRequest {
     @Email(message = "user.email.invalid")
     @NotBlank(message = "user.email.empty")
     private String email;
