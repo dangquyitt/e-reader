@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.model;
+package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

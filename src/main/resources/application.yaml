@@ -15,3 +15,8 @@ spring:
 logging:
   level:
     sql: debug
+
+token:
+  access:
+    secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
+    duration: 2h

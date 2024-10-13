@@ -1,5 +1,6 @@
 package utc2.itk62.e_reader.exception.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     private final MessageSource messageSource;
 
@@ -27,24 +29,25 @@ public class GlobalExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class.getName());
-
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
-        if(ex.getException() != null) {
-            logger.error(ex.getException().getMessage(), ex.getException());
+        if (ex.getException() != null) {
+            log.error(ex.getException().getMessage(), ex);
+        }
+        if (ex.getInternalMessage() != null) {
+           log.error(ex.getInternalMessage(), ex);
         }
         Locale locale = LocaleContextHolder.getLocale();
         List<Error> errors = new ArrayList<>();
         ex.getErrors().forEach(error -> {
-            errors.add(new Error(error.getField(), messageSource.getMessage(error.getMessage(),null, locale)));
+            errors.add(new Error(error.getField(), messageSource.getMessage(error.getMessage(), null, locale)));
         });
         return ErrorResponse.badRequest(errors);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        logger.error(ex.getMessage(), ex);
+        log.error(ex.getMessage(), ex);
         return ErrorResponse.internalServerError();
     }
 
@@ -52,7 +55,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<Error> errors = new ArrayList<>();
         Locale locale = LocaleContextHolder.getLocale();
-        for(FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.add(new Error(fieldError.getField(), messageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale)));
         }
         return ErrorResponse.badRequest(errors);

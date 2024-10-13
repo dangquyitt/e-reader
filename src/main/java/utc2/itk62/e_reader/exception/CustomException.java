@@ -11,12 +11,18 @@ public class CustomException extends RuntimeException{
     private int status;
     private List<Error> errors;
     private Exception exception;
+    private String internalMessage;
 
     public CustomException addError(Error error){
         if(this.errors == null){
             this.errors = new ArrayList<>();
         }
         this.errors.add(error);
+        return this;
+    }
+
+    public CustomException setInternalMessage(String internalMessage){
+        this.internalMessage = internalMessage;
         return this;
     }
 
