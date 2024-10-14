@@ -1,6 +1,7 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.error.Error;

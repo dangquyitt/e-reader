@@ -1,5 +1,6 @@
 package utc2.itk62.e_reader.configuration;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,33 +13,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import utc2.itk62.e_reader.filter.AuthenticationFilter;
-import utc2.itk62.e_reader.service.TokenService;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfiguration {
     private static final String[] PUBLIC_ENDPOINTS = {"/api/auth/**", "/api/tokens/**"};
-    private final TokenService tokenService;
-
-    public SecurityConfiguration(TokenService tokenService) {
-        this.tokenService = tokenService;
-    }
+    private final AuthenticationFilter authenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
                 .permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated())
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
-    }
-
-    private AuthenticationFilter jwtAuthenticationFilter() {
-        return new AuthenticationFilter(tokenService);
     }
 
     @Bean
