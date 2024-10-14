@@ -2,11 +2,11 @@ package utc2.itk62.e_reader.domain.model;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
-public class JwtAuthenticationToken extends AbstractAuthenticationToken {
+public class AuthenticationToken extends AbstractAuthenticationToken {
 
     private final TokenPayload payload;
 
-    public JwtAuthenticationToken(TokenPayload payload) {
+    public AuthenticationToken(TokenPayload payload) {
         super(null);
         this.payload = payload;
         this.setAuthenticated(true);

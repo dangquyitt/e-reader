@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import utc2.itk62.e_reader.filter.JwtAuthenticationFilter;
+import utc2.itk62.e_reader.filter.AuthenticationFilter;
 import utc2.itk62.e_reader.service.TokenService;
 
 @Configuration
@@ -37,8 +37,8 @@ public class SecurityConfiguration {
         return httpSecurity.build();
     }
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(tokenService);
+    private AuthenticationFilter jwtAuthenticationFilter() {
+        return new AuthenticationFilter(tokenService);
     }
 
     @Bean
