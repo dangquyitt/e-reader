@@ -20,3 +20,16 @@ token:
   access:
     secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
     duration: 2h
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    region:
+      static: ap-southeast-1
+    endpointUrl: https://s3.ap-southeast-1.amazonaws.com
+
+application:
+  bucket:
+    name: uploadfileimage
