@@ -9,5 +9,4 @@ public interface FileService {
 
     boolean deleteFile(String fileName);
 
-    File convertMultiartFileToFile(MultipartFile file);
 }

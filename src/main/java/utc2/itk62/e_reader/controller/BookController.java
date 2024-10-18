@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
+import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 import utc2.itk62.e_reader.dto.BookResponse;
 import utc2.itk62.e_reader.dto.CreateBookRequest;
 import utc2.itk62.e_reader.service.BookService;
@@ -14,25 +16,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/book")
+@RequestMapping("/api/books")
 @AllArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<HTTPResponse<BookResponse>> create(@RequestPart("file")MultipartFile file,
                                                              @RequestPart("data")CreateBookRequest request) {
-        Book book = bookService.createBook(file,request);
+        CreateBookParam createBookParam = CreateBookParam.builder()
+                .file(file)
+                .request(request)
+                .build();
+        Book book = bookService.createBook(createBookParam);
         BookResponse bookResponse = BookResponse.builder()
                 .language(book.getLanguage())
                 .title(book.getTitle())
                 .id(book.getId())
                 .author(book.getAuthor())
-                .year(book.getYear())
+                .releaseYear(book.getReleaseYear())
                 .genre(book.getGenre())
-                .numberOfPages(book.getNumberOfPages())
-                .file(book.getFile())
+                .totalPage(book.getTotalPage())
+                .fileUrl(book.getFileUrl())
                 .build();
         return HTTPResponse.ok(bookResponse);
     }
@@ -41,16 +47,22 @@ public class BookController {
     public ResponseEntity<HTTPResponse<BookResponse>> update(@RequestPart("file")MultipartFile file,
                                                             @RequestPart("data")CreateBookRequest request,
                                                              @PathVariable Long id) {
-        Book book = bookService.updateBook(file,request,id);
+        UpdateBookParam updateBookParam = UpdateBookParam.builder()
+                .file(file)
+                .request(request)
+                .id(id)
+                .build();
+
+        Book book = bookService.updateBook(updateBookParam);
         BookResponse bookResponse = BookResponse.builder()
                 .language(book.getLanguage())
                 .title(book.getTitle())
                 .id(book.getId())
                 .author(book.getAuthor())
-                .year(book.getYear())
+                .releaseYear(book.getReleaseYear())
                 .genre(book.getGenre())
-                .numberOfPages(book.getNumberOfPages())
-                .file(book.getFile())
+                .totalPage(book.getTotalPage())
+                .fileUrl(book.getFileUrl())
                 .build();
         return HTTPResponse.ok(bookResponse);
     }
@@ -63,10 +75,10 @@ public class BookController {
                 .title(book.getTitle())
                 .id(book.getId())
                 .author(book.getAuthor())
-                .year(book.getYear())
+                .releaseYear(book.getReleaseYear())
                 .genre(book.getGenre())
-                .numberOfPages(book.getNumberOfPages())
-                .file(book.getFile())
+                .totalPage(book.getTotalPage())
+                .fileUrl(book.getFileUrl())
                 .build();
         return HTTPResponse.ok(bookResponse);
     }
@@ -76,12 +88,12 @@ public class BookController {
         List<BookResponse> bookResponseList = bookService.getAllBook()
                 .stream().map(book -> BookResponse.builder()
                         .id(book.getId())
-                        .file(book.getFile())
+                        .fileUrl(book.getFileUrl())
                         .language(book.getLanguage())
                         .title(book.getTitle())
-                        .numberOfPages(book.getNumberOfPages())
+                        .totalPage(book.getTotalPage())
                         .genre(book.getGenre())
-                        .year(book.getYear())
+                        .releaseYear(book.getReleaseYear())
                         .author(book.getAuthor())
                         .build()).collect(Collectors.toList());
 

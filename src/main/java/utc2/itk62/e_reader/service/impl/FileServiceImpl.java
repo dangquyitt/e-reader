@@ -72,14 +72,19 @@ public class FileServiceImpl implements FileService {
         return isSuccess;
     }
 
-    @Override
-    public File convertMultiartFileToFile(MultipartFile file) {
-        File convertFile = new File(file.getOriginalFilename());
-        try(FileOutputStream fos = new FileOutputStream(convertFile)){
-            fos.write(file.getBytes());
-        } catch (IOException e) {
-            log.error("Error converting multipartFile to file", e);
+    private File convertMultiartFileToFile(MultipartFile file) {
+        try {
+            File convertFile = new File(file.getOriginalFilename());
+            try(FileOutputStream fos = new FileOutputStream(convertFile)){
+                fos.write(file.getBytes());
+            } catch (IOException e) {
+                log.error("Error converting multipartFile to file", e);
+            }
+            return convertFile;
+        }catch (Exception exception){
+            throw new CustomException().setException(exception)
+                    .addError(new Error("book","book.file.can_not_covert"));
         }
-        return convertFile;
+
     }
 }

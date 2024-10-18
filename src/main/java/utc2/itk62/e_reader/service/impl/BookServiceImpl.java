@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.domain.entity.Book;
+import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 import utc2.itk62.e_reader.dto.CreateBookRequest;
 import utc2.itk62.e_reader.exception.CustomException;
 import utc2.itk62.e_reader.repository.BookRepository;
@@ -20,16 +22,16 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final FileService fileService;
     @Override
-    public Book createBook(MultipartFile file, CreateBookRequest request) {
+    public Book createBook(CreateBookParam createBookParam) {
 
         Book book = Book.builder()
-                .title(request.getTitle())
-                .year(request.getYear())
-                .genre(request.getGenre())
-                .author(request.getAuthor())
-                .numberOfPages(request.getNumberOfPages())
-                .language(request.getLanguage())
-                .file(fileService.uploadFile(file))
+                .title(createBookParam.getRequest().getTitle())
+                .releaseYear(createBookParam.getRequest().getYear())
+                .genre(createBookParam.getRequest().getGenre())
+                .author(createBookParam.getRequest().getAuthor())
+                .totalPage(createBookParam.getRequest().getNumberOfPages())
+                .language(createBookParam.getRequest().getLanguage())
+                .fileUrl(fileService.uploadFile(createBookParam.getFile()))
                 .build();
 
         return bookRepository.save(book);
@@ -38,37 +40,37 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean deleteBook(Long id) {
         var book = bookRepository.findById(id).orElseThrow(() ->
-                new CustomException().addError(new Error("book","book.id.not_find")));
-        fileService.deleteFile(book.getFile());
+                new CustomException().addError(new Error("book","book.id.not_found")));
+        fileService.deleteFile(book.getFileUrl());
         bookRepository.delete(book);
         return !bookRepository.existsById(id);
     }
 
     @Override
-    public Book updateBook(MultipartFile file, CreateBookRequest request, Long id) {
-        Book book = bookRepository.findById(id).orElseThrow(() ->
-                new CustomException().addError(new Error("book","book.id.not_find")));
-        if(!file.isEmpty()){
-            fileService.deleteFile(book.getFile());
-            book.setFile(fileService.uploadFile(file));
+    public Book updateBook(UpdateBookParam updateBookParam) {
+        Book book = bookRepository.findById(updateBookParam.getId()).orElseThrow(() ->
+                new CustomException().addError(new Error("book","book.id.not_found")));
+        if(!updateBookParam.getFile().isEmpty()){
+            fileService.deleteFile(book.getFileUrl());
+            book.setFileUrl(fileService.uploadFile(updateBookParam.getFile()));
         }
-        if(request.getTitle()!=null){
-            book.setTitle(request.getTitle());
+        if(updateBookParam.getRequest().getTitle()!=null){
+            book.setTitle(updateBookParam.getRequest().getTitle());
         }
-        if(request.getGenre()!=null){
-            book.setGenre(request.getGenre());
+        if(updateBookParam.getRequest().getGenre()!=null){
+            book.setGenre(updateBookParam.getRequest().getGenre());
         }
-        if(request.getLanguage()!=null){
-            book.setLanguage(request.getLanguage());
+        if(updateBookParam.getRequest().getLanguage()!=null){
+            book.setLanguage(updateBookParam.getRequest().getLanguage());
         }
-        if(request.getAuthor()!=null){
-            book.setAuthor(request.getAuthor());
+        if(updateBookParam.getRequest().getAuthor()!=null){
+            book.setAuthor(updateBookParam.getRequest().getAuthor());
         }
-        if(request.getYear() != book.getYear()){
-            book.setYear(request.getYear());
+        if(updateBookParam.getRequest().getYear() != book.getReleaseYear()){
+            book.setReleaseYear(updateBookParam.getRequest().getYear());
         }
-        if(request.getNumberOfPages() != book.getNumberOfPages()){
-            book.setNumberOfPages(request.getNumberOfPages());
+        if(updateBookParam.getRequest().getNumberOfPages() != book.getTotalPage()){
+            book.setTotalPage(updateBookParam.getRequest().getNumberOfPages());
         }
         return bookRepository.save(book);
     }
@@ -76,7 +78,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() ->
-                new CustomException().addError(new Error("book","book.id.not_find")));
+                new CustomException().addError(new Error("book","book.id.not_found")));
     }
 
     @Override

@@ -10,9 +10,9 @@ public class BookResponse {
     private Long id;
     private String title;
     private String author;
-    private int year;
-    private int numberOfPages;
+    private int releaseYear;
+    private int totalPage;
     private String genre;
     private String language;
-    private String file;
+    private String fileUrl;
 }
