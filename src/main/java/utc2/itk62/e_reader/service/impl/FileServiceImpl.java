@@ -47,7 +47,7 @@ public class FileServiceImpl implements FileService {
                     RequestBody.fromFile(fileObj));
         }catch (Exception e){
             throw new CustomException().setException(e)
-                    .addError(new Error("book","book.file.can_not_upload"));
+                    .addError(new Error("file","book.file.can_not_upload"));
         }
 
         fileObj.delete();
@@ -67,13 +67,12 @@ public class FileServiceImpl implements FileService {
             isSuccess = true;
         } catch (Exception e) {
             throw new CustomException().setException(e)
-                    .addError(new Error("book","book.file.can_not_delete"));
+                    .addError(new Error("file","book.file.can_not_delete"));
         }
         return isSuccess;
     }
 
     private File convertMultiartFileToFile(MultipartFile file) {
-        try {
             File convertFile = new File(file.getOriginalFilename());
             try(FileOutputStream fos = new FileOutputStream(convertFile)){
                 fos.write(file.getBytes());
@@ -81,10 +80,5 @@ public class FileServiceImpl implements FileService {
                 log.error("Error converting multipartFile to file", e);
             }
             return convertFile;
-        }catch (Exception exception){
-            throw new CustomException().setException(exception)
-                    .addError(new Error("book","book.file.can_not_covert"));
-        }
-
     }
 }

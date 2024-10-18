@@ -27,7 +27,12 @@ public class BookController {
                                                              @RequestPart("data")CreateBookRequest request) {
         CreateBookParam createBookParam = CreateBookParam.builder()
                 .file(file)
-                .request(request)
+                .title(request.getTitle())
+                .author(request.getAuthor())
+                .genre(request.getGenre())
+                .language(request.getLanguage())
+                .publishedYear(request.getPublishedYear())
+                .totalPage(request.getTotalPage())
                 .build();
         Book book = bookService.createBook(createBookParam);
         BookResponse bookResponse = BookResponse.builder()
@@ -35,7 +40,7 @@ public class BookController {
                 .title(book.getTitle())
                 .id(book.getId())
                 .author(book.getAuthor())
-                .releaseYear(book.getReleaseYear())
+                .publishedYear(book.getPublishedYear())
                 .genre(book.getGenre())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
@@ -49,7 +54,12 @@ public class BookController {
                                                              @PathVariable Long id) {
         UpdateBookParam updateBookParam = UpdateBookParam.builder()
                 .file(file)
-                .request(request)
+                .publishedYear(request.getPublishedYear())
+                .title(request.getTitle())
+                .genre(request.getGenre())
+                .language(request.getLanguage())
+                .author(request.getAuthor())
+                .totalPage(request.getTotalPage())
                 .id(id)
                 .build();
 
@@ -59,7 +69,7 @@ public class BookController {
                 .title(book.getTitle())
                 .id(book.getId())
                 .author(book.getAuthor())
-                .releaseYear(book.getReleaseYear())
+                .publishedYear(book.getPublishedYear())
                 .genre(book.getGenre())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
@@ -75,7 +85,7 @@ public class BookController {
                 .title(book.getTitle())
                 .id(book.getId())
                 .author(book.getAuthor())
-                .releaseYear(book.getReleaseYear())
+                .publishedYear(book.getPublishedYear())
                 .genre(book.getGenre())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
@@ -93,7 +103,7 @@ public class BookController {
                         .title(book.getTitle())
                         .totalPage(book.getTotalPage())
                         .genre(book.getGenre())
-                        .releaseYear(book.getReleaseYear())
+                        .publishedYear(book.getPublishedYear())
                         .author(book.getAuthor())
                         .build()).collect(Collectors.toList());
 

@@ -17,7 +17,7 @@ public class Book extends BaseEntity{
 
     private String title;
     private String author;
-    private int releaseYear;
+    private int publishedYear;
     private int totalPage;
     private String genre;
     private String language;
