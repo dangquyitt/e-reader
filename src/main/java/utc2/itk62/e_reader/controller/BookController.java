@@ -3,13 +3,13 @@ package utc2.itk62.e_reader.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 import utc2.itk62.e_reader.dto.BookResponse;
 import utc2.itk62.e_reader.dto.CreateBookRequest;
+import utc2.itk62.e_reader.dto.UpdateBookRequest;
 import utc2.itk62.e_reader.service.BookService;
 
 import java.util.List;
@@ -23,10 +23,9 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<HTTPResponse<BookResponse>> create(@RequestPart("file")MultipartFile file,
-                                                             @RequestPart("data")CreateBookRequest request) {
+    public ResponseEntity<HTTPResponse<BookResponse>> create(@ModelAttribute CreateBookRequest request) {
         CreateBookParam createBookParam = CreateBookParam.builder()
-                .file(file)
+                .file(request.getFile())
                 .title(request.getTitle())
                 .author(request.getAuthor())
                 .genre(request.getGenre())
@@ -49,20 +48,17 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HTTPResponse<BookResponse>> update(@RequestPart("file")MultipartFile file,
-                                                            @RequestPart("data")CreateBookRequest request,
-                                                             @PathVariable Long id) {
+    public ResponseEntity<HTTPResponse<BookResponse>> update(@ModelAttribute UpdateBookRequest request) {
         UpdateBookParam updateBookParam = UpdateBookParam.builder()
-                .file(file)
+                .file(request.getFile())
                 .publishedYear(request.getPublishedYear())
                 .title(request.getTitle())
                 .genre(request.getGenre())
                 .language(request.getLanguage())
                 .author(request.getAuthor())
                 .totalPage(request.getTotalPage())
-                .id(id)
+                .id(request.getId())
                 .build();
-
         Book book = bookService.updateBook(updateBookParam);
         BookResponse bookResponse = BookResponse.builder()
                 .language(book.getLanguage())

@@ -4,7 +4,8 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class CreateBookRequest {
+public class UpdateBookRequest {
+    private Long id;
     private MultipartFile file;
     private String title;
     private String author;
