@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import utc2.itk62.e_reader.filter.CustomFilter;
 import utc2.itk62.e_reader.filter.AuthenticationFilter;
 
 @Configuration
@@ -22,7 +21,6 @@ import utc2.itk62.e_reader.filter.AuthenticationFilter;
 public class SecurityConfiguration {
     private static final String[] PUBLIC_ENDPOINTS = {"/api/auth/**", "/api/tokens/**"};
     private final AuthenticationFilter authenticationFilter;
-    private final CustomFilter customFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -31,7 +29,6 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated())
-                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
