@@ -1,11 +1,13 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
+
 import utc2.itk62.e_reader.exception.CustomException;
 import utc2.itk62.e_reader.repository.BookRepository;
 import utc2.itk62.e_reader.service.BookService;
@@ -40,6 +42,7 @@ public class BookServiceImpl implements BookService {
         var book = bookRepository.findById(id).orElseThrow(() ->
                 new CustomException().addError(new Error("id","book.id.not_found")));
         fileService.deleteFile(book.getFileUrl());
+
         bookRepository.delete(book);
         return !bookRepository.existsById(id);
     }
@@ -63,6 +66,7 @@ public class BookServiceImpl implements BookService {
     public Book getBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() ->
                 new CustomException().addError(new Error("id","book.id.not_found")));
+
     }
 
     @Override

@@ -17,10 +17,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/books")
+
 @AllArgsConstructor
 public class BookController {
 
     private final BookService bookService;
+
 
     @PostMapping
     public ResponseEntity<HTTPResponse<BookResponse>> create(@ModelAttribute CreateBookRequest request) {
