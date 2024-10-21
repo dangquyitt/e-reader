@@ -1,5 +1,6 @@
 package utc2.itk62.e_reader.domain.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;

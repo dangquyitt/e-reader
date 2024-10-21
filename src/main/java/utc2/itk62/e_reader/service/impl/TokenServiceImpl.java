@@ -28,9 +28,14 @@ public class TokenServiceImpl implements TokenService {
     public String generateAccessToken(TokenPayload payload) {
 
         Instant now = Instant.now();
+        Instant expiration = now.plus(accessTokenDuration);
+
+        payload.setIssuedAt(now);
+        payload.setExpiredAt(expiration);
+
         return Jwts.builder()
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plus(accessTokenDuration)))
+                .issuedAt(Date.from(payload.getIssuedAt()))
+                .expiration(Date.from(payload.getExpiredAt()))
                 .id(payload.getId())
                 .claim("userId", payload.getUserId())
                 .signWith(secretKey()).compact();
