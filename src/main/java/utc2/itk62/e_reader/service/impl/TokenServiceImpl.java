@@ -34,8 +34,8 @@ public class TokenServiceImpl implements TokenService {
         payload.setExpiredAt(expiration);
 
         return Jwts.builder()
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plus(accessTokenDuration)))
+                .issuedAt(Date.from(payload.getIssuedAt()))
+                .expiration(Date.from(payload.getExpiredAt()))
                 .id(payload.getId())
                 .claim("userId", payload.getUserId())
                 .signWith(secretKey()).compact();
