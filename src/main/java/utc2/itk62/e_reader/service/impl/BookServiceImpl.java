@@ -11,6 +11,7 @@ import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
 import utc2.itk62.e_reader.exception.NotFoundException;
+
 import utc2.itk62.e_reader.repository.BookRepository;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
@@ -76,6 +77,7 @@ public class BookServiceImpl implements BookService {
             log.error("BookServiceImpl | id: {} not found", id);
             return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
         });
+
     }
 
     @Override
