@@ -11,7 +11,7 @@ public interface BookService {
     Book createBook(CreateBookParam createBookParam);
     boolean deleteBook(Long id);
     Book updateBook(UpdateBookParam updateBookParam);
-    Book getBook(Long id);
+    Book getBook(Long id, Long userId);
 
     List<Book> getAllBook();
 }

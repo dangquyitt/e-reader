@@ -2,10 +2,12 @@ package utc2.itk62.e_reader.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 import utc2.itk62.e_reader.dto.BookResponse;
 import utc2.itk62.e_reader.dto.CreateBookRequest;
@@ -77,7 +79,8 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HTTPResponse<BookResponse>> getBook(@PathVariable Long id) {
-        Book book = bookService.getBook(id);
+        TokenPayload tokenPayload = (TokenPayload)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Book book = bookService.getBook(id,tokenPayload.getUserId());
         BookResponse bookResponse = BookResponse.builder()
                 .language(book.getLanguage())
                 .title(book.getTitle())

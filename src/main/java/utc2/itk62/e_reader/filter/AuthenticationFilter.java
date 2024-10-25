@@ -44,6 +44,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.info("test log role:" +SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             } catch (Exception e){
                 throw new CustomException().setException(e).addError(new Error("token","token.access_token.invalid"));
             }
