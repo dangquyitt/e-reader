@@ -14,6 +14,7 @@ import utc2.itk62.e_reader.service.SubscriptionService;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +57,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Optional<Double> getPricePlan(Long id) {
         return subscriptionRepository.findLatestPlanVersionPriceBySubscriptionId(id);
+    }
+
+    @Override
+    public List<Subscription> getAll(User user) {
+        List<Subscription> subscriptions = subscriptionRepository.findAllByUser(user);
+        return subscriptions;
     }
 }
