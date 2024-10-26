@@ -2,6 +2,7 @@ package utc2.itk62.e_reader.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,10 +28,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-            String token = authorizationHeader.substring(7);
+        String token = null;
+        if(request.getCookies() != null){
+            for (Cookie cookie: request.getCookies()){
+                if (cookie.getName().equals("accessToken")){
+                    token = cookie.getValue();
+                }
+            }
+        }
+        if (token != null ){
             try {
                 TokenPayload payload = tokenService.validateAccessToken(token);
 

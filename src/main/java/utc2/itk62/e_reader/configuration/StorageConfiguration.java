@@ -19,15 +19,16 @@ public class StorageConfiguration {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
+
 
         return S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .region(Region.of(region))
                 .build();
     }
+
 
 }

@@ -18,7 +18,7 @@ logging:
 
 token:
   access:
-    secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
+    secret: ${TOKEN_ACCESS_SECRET}
     duration: 2h
 
 cloud:
@@ -33,3 +33,4 @@ cloud:
 application:
   bucket:
     name: uploadfileimage
+
