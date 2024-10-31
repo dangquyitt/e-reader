@@ -10,7 +10,7 @@ public class LoginRequest {
     @Email(message = "user.email.invalid")
     @NotBlank(message = "user.email.empty")
     private String email;
-    @Size(min = 6)
+    @Size(min = 6, message = "user.password.min")
     @NotBlank(message = "user.password.empty")
     private String password;
 }

@@ -8,7 +8,7 @@ import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
-import utc2.itk62.e_reader.exception.CustomException;
+import utc2.itk62.e_reader.exception.NotFoundException;
 import utc2.itk62.e_reader.repository.BookRepository;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
@@ -21,6 +21,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final FileService fileService;
+
     @Override
     public Book createBook(CreateBookParam createBookParam) {
 
@@ -40,17 +41,16 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean deleteBook(Long id) {
         var book = bookRepository.findById(id).orElseThrow(() ->
-                new CustomException().addError(new Error("id","book.id.not_found")));
+                new NotFoundException("id", "book.id.not_found"));
         fileService.deleteFile(book.getFileUrl());
-
-        bookRepository.delete(book);
+        bookRepository.deleteById(id);
         return !bookRepository.existsById(id);
     }
 
     @Override
     public Book updateBook(UpdateBookParam updateBookParam) {
         Book book = bookRepository.findById(updateBookParam.getId()).orElseThrow(() ->
-                new CustomException().addError(new Error("id","book.id.not_found")));
+                new NotFoundException("id", "book.id.not_found"));
         fileService.deleteFile(book.getFileUrl());
         book.setFileUrl(fileService.uploadFile(updateBookParam.getFile()));
         book.setTitle(updateBookParam.getTitle());
@@ -65,8 +65,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() ->
-                new CustomException().addError(new Error("id","book.id.not_found")));
-
+                new NotFoundException("id", "book.id.not_found"));
     }
 
     @Override

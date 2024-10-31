@@ -9,8 +9,11 @@ import java.util.List;
 public interface BookService {
 
     Book createBook(CreateBookParam createBookParam);
+
     boolean deleteBook(Long id);
+
     Book updateBook(UpdateBookParam updateBookParam);
+
     Book getBook(Long id);
 
     List<Book> getAllBook();

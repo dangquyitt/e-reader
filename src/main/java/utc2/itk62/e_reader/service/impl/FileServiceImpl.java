@@ -10,7 +10,6 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import utc2.itk62.e_reader.core.error.Error;
-import utc2.itk62.e_reader.exception.CustomException;
 
 import utc2.itk62.e_reader.service.FileService;
 
@@ -49,8 +48,7 @@ public class FileServiceImpl implements FileService {
                             .build(),
                     RequestBody.fromFile(fileObj));
         }catch (Exception e){
-            throw new CustomException().setException(e)
-                    .addError(new Error("file","book.file.can_not_upload"));
+
         }
 
 
@@ -70,8 +68,7 @@ public class FileServiceImpl implements FileService {
                     .build());
             isSuccess = true;
         } catch (Exception e) {
-            throw new CustomException().setException(e)
-                    .addError(new Error("file","book.file.can_not_delete"));
+
         }
         return isSuccess;
     }

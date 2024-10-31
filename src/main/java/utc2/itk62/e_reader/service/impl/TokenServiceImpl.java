@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
-import utc2.itk62.e_reader.exception.CustomException;
+import utc2.itk62.e_reader.exception.UnauthorizedException;
 import utc2.itk62.e_reader.service.TokenService;
 
 import javax.crypto.SecretKey;
@@ -56,9 +56,7 @@ public class TokenServiceImpl implements TokenService {
                     claims.getExpiration().toInstant()
             );
         } catch (Exception e) {
-            throw new CustomException()
-                    .addError(new Error("accessToken", "token.access_token.invalid"))
-                    .setException(e);
+            throw new UnauthorizedException(e.getMessage());
         }
     }
 
