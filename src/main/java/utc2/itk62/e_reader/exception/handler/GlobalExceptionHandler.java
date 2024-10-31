@@ -1,23 +1,22 @@
 package utc2.itk62.e_reader.exception.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.coyote.BadRequestException;
+import org.apache.coyote.Response;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import utc2.itk62.e_reader.core.error.Error;
-import utc2.itk62.e_reader.core.response.ErrorResponse;
-import utc2.itk62.e_reader.exception.CustomException;
+import utc2.itk62.e_reader.core.response.HTTPResponse;
+import utc2.itk62.e_reader.exception.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 
 @RestControllerAdvice
@@ -29,35 +28,75 @@ public class GlobalExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
-        if (ex.getException() != null) {
-            log.error(ex.getException().getMessage(), ex);
-        }
-        if (ex.getInternalMessage() != null) {
-           log.error(ex.getInternalMessage(), ex);
-        }
-        Locale locale = LocaleContextHolder.getLocale();
-        List<Error> errors = new ArrayList<>();
-        ex.getErrors().forEach(error -> {
-            errors.add(new Error(error.getField(), messageSource.getMessage(error.getMessage(), null, locale)));
-        });
-        return ErrorResponse.badRequest(errors);
-    }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return ErrorResponse.internalServerError();
+    public ResponseEntity<HTTPResponse> handleException(Exception ex, Locale locale) {
+        String message = messageSource.getMessage("error.internal_server_error", null, locale);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(HTTPResponse.builder()
+                        .message(message)
+                        .build());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<HTTPResponse> handleForbiddenException(ForbiddenException ex, Locale locale) {
+        String message = messageSource.getMessage("error.forbidden", null, locale);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(HTTPResponse.builder()
+                        .message(message)
+                        .build());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<HTTPResponse> handleUnauthorizedException(UnauthorizedException ex, Locale locale) {
+        String message = messageSource.getMessage("error.unauthorized", null, locale);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(HTTPResponse.builder()
+                        .message(message)
+                        .build());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<Error> errors = new ArrayList<>();
-        Locale locale = LocaleContextHolder.getLocale();
+    public ResponseEntity<HTTPResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, Locale locale) {
+        Map<String, Error> fieldErrorMap = new HashMap<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errors.add(new Error(fieldError.getField(), messageSource.getMessage(Objects.requireNonNull(fieldError.getDefaultMessage()), null, locale)));
+            if (fieldError.getDefaultMessage() != null)
+                fieldErrorMap.put(fieldError.getField(), new Error(messageSource.getMessage(fieldError.getDefaultMessage(), fieldError.getArguments(), locale)));
         }
-        return ErrorResponse.badRequest(errors);
+        return ResponseEntity.badRequest()
+                .body(HTTPResponse.builder()
+                        .errors(fieldErrorMap)
+                        .build());
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<HTTPResponse> handleDuplicateException(DuplicateException ex, Locale locale) {
+        Map<String, Error> fieldErrorMap = new HashMap<>();
+        String message = messageSource.getMessage(ex.getMessage(), ex.getArgs(), locale);
+        fieldErrorMap.put(ex.getField(), new Error(message));
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(HTTPResponse.builder()
+                        .errors(fieldErrorMap)
+                        .build());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<HTTPResponse> handleNotFoundException(NotFoundException ex, Locale locale) {
+        Map<String, Error> fieldErrorMap = new HashMap<>();
+        String message = messageSource.getMessage(ex.getMessage(), ex.getArgs(), locale);
+        fieldErrorMap.put(ex.getField(), new Error(message));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(HTTPResponse.builder()
+                        .errors(fieldErrorMap)
+                        .build());
+    }
+
+    @ExceptionHandler(InvalidCredentialException.class)
+    public ResponseEntity<HTTPResponse> handleInvalidCredentialException(InvalidCredentialException ex, Locale locale) {
+        String message = messageSource.getMessage("credential.invalid", null, locale);
+        return ResponseEntity.badRequest()
+                .body(HTTPResponse.builder()
+                        .message(message)
+                        .build());
     }
 }

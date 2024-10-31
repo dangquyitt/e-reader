@@ -5,28 +5,61 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 
-import java.util.List;
+import java.util.Map;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HTTPResponse<T> {
-    private T data;
-
+public class HTTPResponse {
+    private String message;
+    private Map<String, Error> errors;
+    private Object data;
     private Pagination pagination;
-    public static <T> ResponseEntity<HTTPResponse<T>> ok(T data) {
-        return ResponseEntity.status(HttpStatus.OK).body(new HTTPResponse<>(data, null));
+
+    public static ResponseEntity<HTTPResponse> noContent() {
+        return ResponseEntity.noContent().build();
     }
-    public static <T> ResponseEntity<HTTPResponse<T>>  ok(T data, Pagination pagination) {
-        return ResponseEntity.status(HttpStatus.OK).body(new HTTPResponse<>(data, pagination));
+
+    public static ResponseEntity<HTTPResponse> success(String message, Object data, Pagination pagination) {
+        return ResponseEntity.ok().body(
+                HTTPResponse.builder()
+                        .message(message)
+                        .pagination(pagination)
+                        .data(data)
+                        .build()
+        );
+    }
+
+    public static ResponseEntity<HTTPResponse> success(String message, Object data) {
+        return ResponseEntity.ok().body(
+                HTTPResponse.builder()
+                        .message(message)
+                        .data(data)
+                        .build()
+        );
+    }
+
+    public static ResponseEntity<HTTPResponse> success(String message) {
+        return ResponseEntity.ok().body(
+                HTTPResponse.builder()
+                        .message(message)
+                        .build()
+        );
+    }
+
+    public static ResponseEntity<HTTPResponse> success(Object data) {
+        return ResponseEntity.ok().body(
+                HTTPResponse.builder()
+                        .data(data)
+                        .build()
+        );
     }
 }
-
-

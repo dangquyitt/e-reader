@@ -12,7 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.domain.model.AuthenticationToken;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
-import utc2.itk62.e_reader.exception.CustomException;
+import utc2.itk62.e_reader.exception.UnauthorizedException;
 import utc2.itk62.e_reader.service.TokenService;
 
 import java.io.IOException;
@@ -39,13 +39,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         if (token != null ){
             try {
                 TokenPayload payload = tokenService.validateAccessToken(token);
-
                 AuthenticationToken authentication = new AuthenticationToken(payload);
-
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e){
-                throw new CustomException().setException(e).addError(new Error("token","token.access_token.invalid"));
+                throw new UnauthorizedException(e.getMessage());
             }
         }
 
