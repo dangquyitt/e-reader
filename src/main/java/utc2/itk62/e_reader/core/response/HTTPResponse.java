@@ -5,12 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import utc2.itk62.e_reader.core.error.Error;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 
-import java.util.Map;
 
 
 @AllArgsConstructor
@@ -20,7 +17,6 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HTTPResponse {
     private String message;
-    private Map<String, Error> errors;
     private Object data;
     private Pagination pagination;
 

@@ -1,13 +1,17 @@
 package utc2.itk62.e_reader.service.impl;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utc2.itk62.e_reader.core.error.Error;
+import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
-import utc2.itk62.e_reader.exception.UnauthorizedException;
+import utc2.itk62.e_reader.exception.TokenException;
 import utc2.itk62.e_reader.service.TokenService;
 
 import javax.crypto.SecretKey;
@@ -17,6 +21,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Service
+@Slf4j
 public class TokenServiceImpl implements TokenService {
     @Value("${token.access.secret}")
     private String accessTokenSecret;
@@ -55,15 +60,12 @@ public class TokenServiceImpl implements TokenService {
                     claims.getIssuedAt().toInstant(),
                     claims.getExpiration().toInstant()
             );
-        } catch (Exception e) {
-            throw new UnauthorizedException(e.getMessage());
+        } catch (JwtException e) {
+            log.error("JwtException | {}", e.getMessage());
+            throw new TokenException(e.getMessage());
         }
     }
 
-    @Override
-    public boolean revokeToken(String token) {
-        return false;
-    }
 
     private SecretKey secretKey() {
         return Keys.hmacShaKeyFor(accessTokenSecret.getBytes(StandardCharsets.UTF_8));

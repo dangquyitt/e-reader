@@ -8,9 +8,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-
-import utc2.itk62.e_reader.core.error.Error;
-
 import utc2.itk62.e_reader.service.FileService;
 
 import java.io.File;
@@ -38,16 +35,16 @@ public class FileServiceImpl implements FileService {
     public String uploadFile(MultipartFile file) {
         String fileUrl = "";
         File fileObj = convertMultiartFileToFile(file);
-        String fileName = System.currentTimeMillis()+"_" + file.getOriginalFilename();
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
-        try{
+        try {
             s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
                             .key(fileName)
                             .acl("public-read")
                             .build(),
                     RequestBody.fromFile(fileObj));
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -68,18 +65,18 @@ public class FileServiceImpl implements FileService {
                     .build());
             isSuccess = true;
         } catch (Exception e) {
-
+            log.error("Exception | {}", e.getMessage());
         }
         return isSuccess;
     }
 
     private File convertMultiartFileToFile(MultipartFile file) {
-            File convertFile = new File(file.getOriginalFilename());
-            try(FileOutputStream fos = new FileOutputStream(convertFile)){
-                fos.write(file.getBytes());
-            } catch (IOException e) {
-                log.error("Error converting multipartFile to file", e);
-            }
-            return convertFile;
+        File convertFile = new File(file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+            fos.write(file.getBytes());
+        } catch (IOException e) {
+            log.error("Error converting multipartFile to file", e);
+        }
+        return convertFile;
     }
 }

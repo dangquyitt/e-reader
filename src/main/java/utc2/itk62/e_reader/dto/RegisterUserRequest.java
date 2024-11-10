@@ -7,10 +7,10 @@ import lombok.Data;
 
 @Data
 public class RegisterUserRequest {
-    @Email(message = "user.email.invalid")
-    @NotBlank(message = "user.email.empty")
+    @Email
+    @NotBlank
     private String email;
     @Size(min = 6)
-    @NotBlank(message = "user.password.empty")
+    @NotBlank
     private String password;
 }

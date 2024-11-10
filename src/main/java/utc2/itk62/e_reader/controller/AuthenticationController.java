@@ -4,8 +4,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import utc2.itk62.e_reader.component.Translator;
+import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.User;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
@@ -14,6 +18,7 @@ import utc2.itk62.e_reader.dto.LoginResponse;
 import utc2.itk62.e_reader.dto.RegisterUserRequest;
 import utc2.itk62.e_reader.service.AuthenticationService;
 import utc2.itk62.e_reader.service.TokenService;
+import utc2.itk62.e_reader.service.impl.AuthenticationServiceImpl;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -26,6 +31,7 @@ import java.util.UUID;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final TokenService tokenService;
+    private final Translator translator;
 
     @PostMapping("/login")
     public ResponseEntity<HTTPResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
@@ -43,12 +49,12 @@ public class AuthenticationController {
         cookie.setMaxAge(duration);
         response.addCookie(cookie);
 
-        return HTTPResponse.success(new LoginResponse(token));
+        return HTTPResponse.success(translator.translate(MessageCode.LOGIN_SUCCESS, user.getEmail()),new LoginResponse(token));
     }
 
     @PostMapping("/register")
     public ResponseEntity<HTTPResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
         User user = authenticationService.register(registerUserRequest.getEmail(), registerUserRequest.getPassword());
-        return HTTPResponse.noContent();
+        return HTTPResponse.success(translator.translate(MessageCode.REGISTER_SUCCESS));
     }
 }

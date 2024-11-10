@@ -2,8 +2,10 @@ package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import utc2.itk62.e_reader.core.error.Error;
+import utc2.itk62.e_reader.component.Translator;
+import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
@@ -15,10 +17,11 @@ import utc2.itk62.e_reader.service.FileService;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
-
+    private final Translator translator;
     private final BookRepository bookRepository;
     private final FileService fileService;
 
@@ -40,8 +43,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public boolean deleteBook(Long id) {
-        var book = bookRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("id", "book.id.not_found"));
+        var book = bookRepository.findById(id).orElseThrow(() -> {
+            log.error("BookServiceImpl | id: {} not found", id);
+            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
+        });
         fileService.deleteFile(book.getFileUrl());
         bookRepository.deleteById(id);
         return !bookRepository.existsById(id);
@@ -49,8 +54,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book updateBook(UpdateBookParam updateBookParam) {
-        Book book = bookRepository.findById(updateBookParam.getId()).orElseThrow(() ->
-                new NotFoundException("id", "book.id.not_found"));
+        Book book = bookRepository.findById(updateBookParam.getId()).orElseThrow(() -> {
+            log.error("BookServiceImpl | id: {} not found", updateBookParam.getId());
+            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
+        });
         fileService.deleteFile(book.getFileUrl());
         book.setFileUrl(fileService.uploadFile(updateBookParam.getFile()));
         book.setTitle(updateBookParam.getTitle());
@@ -64,8 +71,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBook(Long id) {
-        return bookRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("id", "book.id.not_found"));
+        return bookRepository.findById(id).orElseThrow(() -> {
+            log.error("BookServiceImpl | id: {} not found", id);
+            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
+        });
     }
 
     @Override

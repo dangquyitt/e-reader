@@ -1,28 +1,36 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import utc2.itk62.e_reader.core.error.Error;
+import utc2.itk62.e_reader.component.Translator;
+import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.User;
+import utc2.itk62.e_reader.exception.AuthenticationException;
 import utc2.itk62.e_reader.exception.DuplicateException;
-import utc2.itk62.e_reader.exception.InvalidCredentialException;
 import utc2.itk62.e_reader.repository.UserRepository;
 import utc2.itk62.e_reader.service.AuthenticationService;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Translator translator;
 
     @Override
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidCredentialException(email));
+                .orElseThrow(() -> {
+                    log.error("AuthenticationServiceImpl | email: {} not exists", email);
+                    return new AuthenticationException(translator.translate(MessageCode.USER_CREDENTIALS_INVALID));
+                });
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new InvalidCredentialException(user.getPassword());
+            log.error("AuthenticationServiceImpl | password invalid");
+            throw new AuthenticationException(translator.translate(MessageCode.USER_CREDENTIALS_INVALID));
         }
 
         return user;
@@ -32,7 +40,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public User register(String email, String password) {
         userRepository.findByEmail(email)
                 .ifPresent(value -> {
-                    throw new DuplicateException("email", "user.email.exists");
+                    log.error("AuthenticationServiceImpl | email: {} already exists", email);
+                    throw new DuplicateException(translator.translate(MessageCode.USER_EMAIL_EXISTS));
                 });
         User user = User.builder().email(email).password(passwordEncoder.encode(password)).build();
         userRepository.save(user);

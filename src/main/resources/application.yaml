@@ -18,14 +18,14 @@ logging:
 
 token:
   access:
-    secret: 465a197a70f8d7f1ff433a2059e8c34018e3bc23a08b8d5b4b7e558794883b39731eca1fb34cb72762a3af442d4b756725894d3326e8aca6c6a61a52a234aec06dddb9cecd3908765cc0425513371dbe4045a4e10f2164898044d85dad1bb1c09ebdf5cbe8044ecd1c7dd30299a11d87d89e1167dfea4e3fcee5964ea25d53b56c02beb4de0d2e33407ed27653d6c16996c757d34c46437ebb862d4b6cd8bcc3dc4bce4c798bfefe192d1b2043cf0a84ba0d9579a6f533b9cd0240503d31cfe571faebab1448eed08d9ca30e55c10b4701f0f1e106d34fc8ae3f2dbba6f0ab1832d870358cebc23117fcfe90f6ab9a06fe6da42d0eb05d767671c6bd89cadf2b
+    secret: ${TOKEN_ACCESS_SECRET}
     duration: 2h
 
 cloud:
   aws:
     credentials:
-      access-key: 12312
-      secret-key: 12321
+      access-key: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}
+      secret-key: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}
     region:
       static: ap-southeast-1
     endpointUrl: https://s3.ap-southeast-1.amazonaws.com
