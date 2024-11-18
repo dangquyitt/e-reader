@@ -9,10 +9,10 @@ public class BookResponse {
 
     private Long id;
     private String title;
-    private String author;
-    private int publishedYear;
+    private String desc;
     private int totalPage;
-    private String genre;
-    private String language;
+    private float rating;
+    private int publishedYear;
+    private String coverImageUrl;
     private String fileUrl;
 }

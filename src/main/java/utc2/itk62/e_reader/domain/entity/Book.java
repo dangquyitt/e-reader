@@ -1,12 +1,13 @@
 package utc2.itk62.e_reader.domain.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -17,11 +18,32 @@ import lombok.NoArgsConstructor;
 public class Book extends BaseEntity{
 
     private String title;
-    private String author;
-    private int publishedYear;
+    private String desc;
     private int totalPage;
-    private String genre;
-    private String language;
+    private float rating;
+    private int publishedYear;
+    private String coverImageUrl;
     private String fileUrl;
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<Favorite> likedByUser;
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<Comment> commentByUser;
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<ReadingProgress> readingProgresses;
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<Rating> ratings;
+
+    @ManyToMany
+    private Set<Collection> collections;
+
+    @ManyToMany
+    private Set<Author> authors;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
 }
