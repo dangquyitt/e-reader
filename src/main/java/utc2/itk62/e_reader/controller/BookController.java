@@ -42,14 +42,14 @@ public class BookController {
         BookResponse bookResponse = BookResponse.builder()
                 .title(book.getTitle())
                 .id(book.getId())
-                .desc(book.getDesc())
+                .desc(book.getDescription())
                 .rating(book.getRating())
                 .publishedYear(book.getPublishedYear())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
                 .build();
 
-        String message = messageSource.getMessage("book.created", null, locale);
+        String message = messageSource.getMessage("book.create.success", null, locale);
         return HTTPResponse.success(message,bookResponse);
     }
 
@@ -69,14 +69,14 @@ public class BookController {
         BookResponse bookResponse = BookResponse.builder()
                 .title(book.getTitle())
                 .id(book.getId())
-                .desc(book.getDesc())
+                .desc(book.getDescription())
                 .rating(book.getRating())
                 .publishedYear(book.getPublishedYear())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
                 .build();
 
-        String message = messageSource.getMessage("book.create.success", null, locale);
+        String message = messageSource.getMessage("book.update.success", null, locale);
         return HTTPResponse.success(message, bookResponse);
     }
 
@@ -86,7 +86,7 @@ public class BookController {
         BookResponse bookResponse = BookResponse.builder()
                 .title(book.getTitle())
                 .id(book.getId())
-                .desc(book.getDesc())
+                .desc(book.getDescription())
                 .rating(book.getRating())
                 .publishedYear(book.getPublishedYear())
                 .totalPage(book.getTotalPage())
@@ -101,7 +101,7 @@ public class BookController {
                 .stream().map(book -> BookResponse.builder()
                         .title(book.getTitle())
                         .id(book.getId())
-                        .desc(book.getDesc())
+                        .desc(book.getDescription())
                         .rating(book.getRating())
                         .publishedYear(book.getPublishedYear())
                         .totalPage(book.getTotalPage())

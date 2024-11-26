@@ -18,7 +18,7 @@ import java.util.Set;
 public class Book extends BaseEntity{
 
     private String title;
-    private String desc;
+    private String description;
     private int totalPage;
     private float rating;
     private int publishedYear;
