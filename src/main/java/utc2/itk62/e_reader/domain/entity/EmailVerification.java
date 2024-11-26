@@ -6,10 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.Status;
+import utc2.itk62.e_reader.domain.enums.EmailVerificationStatus;
 
 import java.time.Instant;
-import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -24,6 +23,6 @@ public class EmailVerification extends BaseEntity{
     private Instant expiredAt;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private EmailVerificationStatus status;
 
 }

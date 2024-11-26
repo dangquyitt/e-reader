@@ -18,7 +18,7 @@ import java.util.Set;
 public class Book extends BaseEntity{
 
     private String title;
-    private String desc;
+    private String description;
     private int totalPage;
     private float rating;
     private int publishedYear;
@@ -26,7 +26,7 @@ public class Book extends BaseEntity{
     private String fileUrl;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Favorite> likedByUser;
+    private Set<Favorite> favorites;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Comment> commentByUser;
