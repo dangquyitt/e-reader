@@ -29,7 +29,7 @@ public class Book extends BaseEntity{
     private Set<Favorite> favorites;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Comment> commentByUser;
+    private Set<Comment> comments;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<ReadingProgress> readingProgresses;
