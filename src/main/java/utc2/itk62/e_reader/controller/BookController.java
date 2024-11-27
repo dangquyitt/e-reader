@@ -27,58 +27,57 @@ public class BookController {
     private final MessageSource messageSource;
 
 
+
     @PostMapping
     public ResponseEntity<HTTPResponse> create(@ModelAttribute CreateBookRequest request, Locale locale) {
         CreateBookParam createBookParam = CreateBookParam.builder()
-                .file(request.getFile())
+                .fileBook(request.getFileBook())
+                .fileCoverImage(request.getFileCoverImage())
                 .title(request.getTitle())
-                .author(request.getAuthor())
-                .genre(request.getGenre())
-                .language(request.getLanguage())
-                .publishedYear(request.getPublishedYear())
+                .desc(request.getDesc())
                 .totalPage(request.getTotalPage())
+                .rating(request.getRating())
+                .publishedYear(request.getPublishedYear())
                 .build();
         Book book = bookService.createBook(createBookParam);
         BookResponse bookResponse = BookResponse.builder()
-                .language(book.getLanguage())
                 .title(book.getTitle())
                 .id(book.getId())
-                .author(book.getAuthor())
+                .desc(book.getDescription())
+                .rating(book.getRating())
                 .publishedYear(book.getPublishedYear())
-                .genre(book.getGenre())
-                .totalPage(book.getTotalPage())
-                .fileUrl(book.getFileUrl())
-                .build();
-
-        String message = messageSource.getMessage("book.created", null, locale);
-        return HTTPResponse.success(message);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<HTTPResponse> update(@ModelAttribute UpdateBookRequest request, Locale locale) {
-        UpdateBookParam updateBookParam = UpdateBookParam.builder()
-                .file(request.getFile())
-                .publishedYear(request.getPublishedYear())
-                .title(request.getTitle())
-                .genre(request.getGenre())
-                .language(request.getLanguage())
-                .author(request.getAuthor())
-                .totalPage(request.getTotalPage())
-                .id(request.getId())
-                .build();
-        Book book = bookService.updateBook(updateBookParam);
-        BookResponse bookResponse = BookResponse.builder()
-                .language(book.getLanguage())
-                .title(book.getTitle())
-                .id(book.getId())
-                .author(book.getAuthor())
-                .publishedYear(book.getPublishedYear())
-                .genre(book.getGenre())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
                 .build();
 
         String message = messageSource.getMessage("book.create.success", null, locale);
+        return HTTPResponse.success(message,bookResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HTTPResponse> update(@ModelAttribute UpdateBookRequest request, Locale locale) {
+        UpdateBookParam updateBookParam = UpdateBookParam.builder()
+                .id(request.getId())
+                .fileBook(request.getFileBook())
+                .fileCoverImage(request.getFileCoverImage())
+                .title(request.getTitle())
+                .desc(request.getDesc())
+                .totalPage(request.getTotalPage())
+                .rating(request.getRating())
+                .publishedYear(request.getPublishedYear())
+                .build();
+        Book book = bookService.updateBook(updateBookParam);
+        BookResponse bookResponse = BookResponse.builder()
+                .title(book.getTitle())
+                .id(book.getId())
+                .desc(book.getDescription())
+                .rating(book.getRating())
+                .publishedYear(book.getPublishedYear())
+                .totalPage(book.getTotalPage())
+                .fileUrl(book.getFileUrl())
+                .build();
+
+        String message = messageSource.getMessage("book.update.success", null, locale);
         return HTTPResponse.success(message, bookResponse);
     }
 
@@ -86,12 +85,11 @@ public class BookController {
     public ResponseEntity<HTTPResponse> getBook(@PathVariable Long id) {
         Book book = bookService.getBook(id);
         BookResponse bookResponse = BookResponse.builder()
-                .language(book.getLanguage())
                 .title(book.getTitle())
                 .id(book.getId())
-                .author(book.getAuthor())
+                .desc(book.getDescription())
+                .rating(book.getRating())
                 .publishedYear(book.getPublishedYear())
-                .genre(book.getGenre())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
                 .build();
@@ -102,14 +100,13 @@ public class BookController {
 
         List<BookResponse> bookResponseList = bookService.getAllBook()
                 .stream().map(book -> BookResponse.builder()
-                        .id(book.getId())
-                        .fileUrl(book.getFileUrl())
-                        .language(book.getLanguage())
                         .title(book.getTitle())
-                        .totalPage(book.getTotalPage())
-                        .genre(book.getGenre())
+                        .id(book.getId())
+                        .desc(book.getDescription())
+                        .rating(book.getRating())
                         .publishedYear(book.getPublishedYear())
-                        .author(book.getAuthor())
+                        .totalPage(book.getTotalPage())
+                        .fileUrl(book.getFileUrl())
                         .build()).collect(Collectors.toList());
 
         return HTTPResponse.success(bookResponseList);

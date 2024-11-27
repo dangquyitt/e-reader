@@ -11,6 +11,7 @@ import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
 import utc2.itk62.e_reader.exception.NotFoundException;
+
 import utc2.itk62.e_reader.repository.BookRepository;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
@@ -30,12 +31,12 @@ public class BookServiceImpl implements BookService {
 
         Book book = Book.builder()
                 .title(createBookParam.getTitle())
+                .description(createBookParam.getDesc())
+                .rating(createBookParam.getRating())
                 .publishedYear(createBookParam.getPublishedYear())
-                .genre(createBookParam.getGenre())
-                .author(createBookParam.getAuthor())
                 .totalPage(createBookParam.getTotalPage())
-                .language(createBookParam.getLanguage())
-                .fileUrl(fileService.uploadFile(createBookParam.getFile()))
+                .fileUrl(fileService.uploadFile(createBookParam.getFileBook()))
+                .coverImageUrl(fileService.uploadFile(createBookParam.getFileCoverImage()))
                 .build();
 
         return bookRepository.save(book);
@@ -59,11 +60,12 @@ public class BookServiceImpl implements BookService {
             return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
         });
         fileService.deleteFile(book.getFileUrl());
-        book.setFileUrl(fileService.uploadFile(updateBookParam.getFile()));
+        fileService.deleteFile(book.getCoverImageUrl());
+        book.setFileUrl(fileService.uploadFile(updateBookParam.getFileBook()));
+        book.setCoverImageUrl(fileService.uploadFile(updateBookParam.getFileCoverImage()));
         book.setTitle(updateBookParam.getTitle());
-        book.setGenre(updateBookParam.getGenre());
-        book.setLanguage(updateBookParam.getLanguage());
-        book.setAuthor(updateBookParam.getAuthor());
+        book.setDescription(updateBookParam.getDesc());
+        book.setRating(updateBookParam.getRating());
         book.setPublishedYear(updateBookParam.getPublishedYear());
         book.setTotalPage(updateBookParam.getTotalPage());
         return bookRepository.save(book);
@@ -75,6 +77,7 @@ public class BookServiceImpl implements BookService {
             log.error("BookServiceImpl | id: {} not found", id);
             return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
         });
+
     }
 
     @Override

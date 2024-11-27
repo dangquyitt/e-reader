@@ -13,7 +13,6 @@ public interface BookService {
     boolean deleteBook(Long id);
 
     Book updateBook(UpdateBookParam updateBookParam);
-
     Book getBook(Long id);
 
     List<Book> getAllBook();

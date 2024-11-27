@@ -6,11 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class UpdateBookRequest {
     private Long id;
-    private MultipartFile file;
+    private MultipartFile fileBook;
+    private MultipartFile fileCoverImage;
     private String title;
-    private String author;
-    private int publishedYear;
+    private String desc;
     private int totalPage;
-    private String genre;
-    private String language;
+    private float rating;
+    private int publishedYear;
 }

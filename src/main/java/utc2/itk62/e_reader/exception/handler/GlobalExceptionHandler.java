@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
-import utc2.itk62.e_reader.exception.*;
-
-import java.util.*;
+import utc2.itk62.e_reader.exception.AuthenticationException;
+import utc2.itk62.e_reader.exception.DuplicateException;
+import utc2.itk62.e_reader.exception.NotFoundException;
 
 
 @RestControllerAdvice

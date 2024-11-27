@@ -11,10 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "permissions")
-public class Permission extends BaseEntity {
+@Table(name = "collections")
+public class Collection extends BaseEntity{
 
     private String name;
-    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 
 }

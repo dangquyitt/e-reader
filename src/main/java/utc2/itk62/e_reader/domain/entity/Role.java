@@ -1,12 +1,11 @@
 package utc2.itk62.e_reader.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import utc2.itk62.e_reader.domain.enums.RoleName;
 
 import java.util.Set;
 
@@ -18,9 +17,8 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role extends BaseEntity{
 
-    private String name;
-    private String description;
+    @Enumerated(EnumType.STRING)
+    private RoleName roleName;
 
-    @ManyToMany
-    private Set<Permission> permissions;
+
 }
