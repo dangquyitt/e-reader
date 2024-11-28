@@ -3,6 +3,9 @@ package utc2.itk62.e_reader.service.impl;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
@@ -81,7 +84,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBook() {
-        return bookRepository.findAll();
+    public Page<Book> getAllBook(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page,pageSize);
+        return bookRepository.findAll(pageable);
     }
 }

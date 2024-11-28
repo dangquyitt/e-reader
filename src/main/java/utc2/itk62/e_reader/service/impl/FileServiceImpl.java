@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
                             .build(),
                     RequestBody.fromFile(fileObj));
         } catch (Exception e) {
-
+            log.error("Exception | {}", e.getMessage());
         }
 
 
