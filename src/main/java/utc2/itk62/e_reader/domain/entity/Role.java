@@ -15,10 +15,17 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "roles")
-public class Role extends BaseEntity{
+public class Role extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
+
+    @ManyToMany
+    @JoinTable(
+            name = "role_permissions",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private Set<Permission> permissions;
 
 
 }

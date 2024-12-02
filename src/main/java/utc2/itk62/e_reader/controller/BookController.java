@@ -9,13 +9,16 @@ import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.PaginationParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 import utc2.itk62.e_reader.dto.BookResponse;
 import utc2.itk62.e_reader.dto.CreateBookRequest;
 import utc2.itk62.e_reader.dto.UpdateBookRequest;
 import utc2.itk62.e_reader.service.BookService;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/books")
@@ -25,7 +28,6 @@ public class BookController {
 
     private final BookService bookService;
     private final MessageSource messageSource;
-
 
 
     @PostMapping
@@ -52,7 +54,7 @@ public class BookController {
                 .build();
 
         String message = messageSource.getMessage("book.create.success", null, locale);
-        return HTTPResponse.success(message,bookResponse);
+        return HTTPResponse.success(message, bookResponse);
     }
 
     @PutMapping("/{id}")
@@ -76,7 +78,6 @@ public class BookController {
                 .publishedYear(book.getPublishedYear())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
-                .coverImageUrl(book.getCoverImageUrl())
                 .build();
 
         String message = messageSource.getMessage("book.update.success", null, locale);
@@ -97,37 +98,35 @@ public class BookController {
                 .build();
         return HTTPResponse.success(bookResponse);
     }
+
     @GetMapping
-    public ResponseEntity<HTTPResponse> getAllBook( @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "10") int pageSize) {
-
-        Page<BookResponse> booksPage = bookService.getAllBook(page, pageSize).map(book ->BookResponse.builder()
-                .title(book.getTitle())
-                .id(book.getId())
-                .desc(book.getDescription())
-                .rating(book.getRating())
-                .publishedYear(book.getPublishedYear())
-                .totalPage(book.getTotalPage())
-                .fileUrl(book.getFileUrl())
-                .coverImageUrl(book.getCoverImageUrl())
-                .build());
-
+    public ResponseEntity<HTTPResponse> getAllBook(@ModelAttribute PaginationParam paginationParam) {
         Pagination pagination = new Pagination(
-                booksPage.getNumber(),
-                booksPage.getSize(),
-                booksPage.hasNext() ? booksPage.getNumber() + 1 : -1,
-                booksPage.hasPrevious() ? booksPage.getNumber() - 1 : -1,
-                (int) booksPage.getTotalElements()
+                paginationParam.getPage(),
+                paginationParam.getPageSize()
         );
 
-        return HTTPResponse.success("Books retrieved successfully", booksPage.getContent(),pagination);
+        List<BookResponse> booksPage = bookService.
+                getAllBook(pagination).stream().map(book -> BookResponse.builder()
+                        .title(book.getTitle())
+                        .id(book.getId())
+                        .desc(book.getDescription())
+                        .rating(book.getRating())
+                        .publishedYear(book.getPublishedYear())
+                        .totalPage(book.getTotalPage())
+                        .fileUrl(book.getFileUrl())
+                        .coverImageUrl(book.getCoverImageUrl())
+                        .build()).toList();
+
+
+        return HTTPResponse.success("Books retrieved successfully", booksPage, pagination);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HTTPResponse> deleteBook(@PathVariable Long id) {
 
         String message = "";
-        if(bookService.deleteBook(id)){
+        if (bookService.deleteBook(id)) {
             message = "Delete book successfully";
         }
 
