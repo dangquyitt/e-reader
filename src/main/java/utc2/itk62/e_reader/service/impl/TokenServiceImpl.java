@@ -1,15 +1,12 @@
 package utc2.itk62.e_reader.service.impl;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.exception.TokenException;
 import utc2.itk62.e_reader.service.TokenService;
@@ -18,7 +15,8 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -43,6 +41,7 @@ public class TokenServiceImpl implements TokenService {
                 .expiration(Date.from(payload.getExpiredAt()))
                 .id(payload.getId())
                 .claim("userId", payload.getUserId())
+                .claim("rolesClaim", payload.getRoles())
                 .signWith(secretKey()).compact();
     }
 
@@ -58,7 +57,8 @@ public class TokenServiceImpl implements TokenService {
                     claims.getId(),
                     claims.get("userId", Long.class),
                     claims.getIssuedAt().toInstant(),
-                    claims.getExpiration().toInstant()
+                    claims.getExpiration().toInstant(),
+                    claims.get("rolesClaim", List.class)
             );
         } catch (JwtException e) {
             log.error("JwtException | {}", e.getMessage());

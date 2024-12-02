@@ -1,5 +1,6 @@
 package utc2.itk62.e_reader.service;
 
+import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
@@ -15,5 +16,5 @@ public interface BookService {
     Book updateBook(UpdateBookParam updateBookParam);
     Book getBook(Long id);
 
-    List<Book> getAllBook();
+    List<Book> getAllBook(Pagination pagination);
 }

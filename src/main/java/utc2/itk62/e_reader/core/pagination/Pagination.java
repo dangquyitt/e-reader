@@ -11,4 +11,9 @@ public class Pagination {
     int nextPage;
     int prevPage;
     int total;
+
+    public Pagination(int page, int pageSize) {
+        this.page = page;
+        this.pageSize = pageSize;
+    }
 }

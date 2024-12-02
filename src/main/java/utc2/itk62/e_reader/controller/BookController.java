@@ -2,11 +2,14 @@ package utc2.itk62.e_reader.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.PaginationParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 import utc2.itk62.e_reader.dto.BookResponse;
 import utc2.itk62.e_reader.dto.CreateBookRequest;
@@ -25,7 +28,6 @@ public class BookController {
 
     private final BookService bookService;
     private final MessageSource messageSource;
-
 
 
     @PostMapping
@@ -48,10 +50,11 @@ public class BookController {
                 .publishedYear(book.getPublishedYear())
                 .totalPage(book.getTotalPage())
                 .fileUrl(book.getFileUrl())
+                .coverImageUrl(book.getCoverImageUrl())
                 .build();
 
         String message = messageSource.getMessage("book.create.success", null, locale);
-        return HTTPResponse.success(message,bookResponse);
+        return HTTPResponse.success(message, bookResponse);
     }
 
     @PutMapping("/{id}")
@@ -95,11 +98,16 @@ public class BookController {
                 .build();
         return HTTPResponse.success(bookResponse);
     }
-    @GetMapping
-    public ResponseEntity<HTTPResponse> getAllBook() {
 
-        List<BookResponse> bookResponseList = bookService.getAllBook()
-                .stream().map(book -> BookResponse.builder()
+    @GetMapping
+    public ResponseEntity<HTTPResponse> getAllBook(@ModelAttribute PaginationParam paginationParam) {
+        Pagination pagination = new Pagination(
+                paginationParam.getPage(),
+                paginationParam.getPageSize()
+        );
+
+        List<BookResponse> booksPage = bookService.
+                getAllBook(pagination).stream().map(book -> BookResponse.builder()
                         .title(book.getTitle())
                         .id(book.getId())
                         .desc(book.getDescription())
@@ -107,16 +115,18 @@ public class BookController {
                         .publishedYear(book.getPublishedYear())
                         .totalPage(book.getTotalPage())
                         .fileUrl(book.getFileUrl())
-                        .build()).collect(Collectors.toList());
+                        .coverImageUrl(book.getCoverImageUrl())
+                        .build()).toList();
 
-        return HTTPResponse.success(bookResponseList);
+
+        return HTTPResponse.success("Books retrieved successfully", booksPage, pagination);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HTTPResponse> deleteBook(@PathVariable Long id) {
 
         String message = "";
-        if(bookService.deleteBook(id)){
+        if (bookService.deleteBook(id)) {
             message = "Delete book successfully";
         }
 
