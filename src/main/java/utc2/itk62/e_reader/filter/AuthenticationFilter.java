@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import utc2.itk62.e_reader.domain.model.AuthenticationToken;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
@@ -24,13 +25,13 @@ import java.io.IOException;
 @Slf4j
 @AllArgsConstructor
 public class AuthenticationFilter extends OncePerRequestFilter {
-    private final String ACCESS_TOKEN_KEY = "accessToken";
+    private final String HEADER_AUTHORIZATION = "Authorization";
     private final TokenService tokenService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = extractTokenFromCookies(request);
+            String token = extractTokenFromRequest(request);
 
             if (token == null) {
                 doFilter(request, response, filterChain);
@@ -49,14 +50,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String extractTokenFromCookies(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (ACCESS_TOKEN_KEY.equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
+
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
+
         return null;
     }
 }

@@ -11,6 +11,7 @@ import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.Book;
+import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
@@ -85,13 +86,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBook(Pagination pagination) {
-        Pageable pageable = PageRequest.of(pagination.getPage(), pagination.getPageSize());
+    public List<Book> getAllBook(BookFilter bookFilter, Pagination pagination) {
+        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Book> pageBooks = bookRepository.findAll(pageable);
-
-        // TODO: logic for pagination
-
-
+        pagination.setTotal(pageBooks.getTotalPages());
         return pageBooks.toList();
     }
 }

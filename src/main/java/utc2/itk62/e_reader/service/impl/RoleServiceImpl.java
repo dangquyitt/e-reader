@@ -2,11 +2,17 @@ package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
+import utc2.itk62.e_reader.core.pagination.Pagination;
+import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.enums.RoleName;
+import utc2.itk62.e_reader.domain.model.RoleFilter;
 import utc2.itk62.e_reader.exception.NotFoundException;
 import utc2.itk62.e_reader.repository.RoleRepository;
 import utc2.itk62.e_reader.service.RoleService;
@@ -25,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
         RoleName parseRoleName;
         try {
             parseRoleName = RoleName.valueOf(roleName.toUpperCase());
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new NotFoundException(translator.translate(MessageCode.INVALID_ROLE_NAME));
         }
         Role role = Role.builder()
@@ -53,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
         RoleName parseRoleName;
         try {
             parseRoleName = RoleName.valueOf(roleName.toUpperCase());
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new NotFoundException(translator.translate(MessageCode.INVALID_ROLE_NAME));
         }
         role.setRoleName(parseRoleName);
@@ -69,7 +75,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getAllRole() {
-        return roleRepository.findAll();
+    public List<Role> getAllRole(RoleFilter filter, Pagination pagination) {
+        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
+        Page<Role> roles = roleRepository.findAll(pageable);
+        pagination.setTotal(roles.getTotalPages());
+        return roles.toList();
     }
 }

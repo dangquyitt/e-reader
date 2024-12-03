@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Role;
+import utc2.itk62.e_reader.domain.model.RoleFilter;
 import utc2.itk62.e_reader.dto.CreateRoleRequest;
+import utc2.itk62.e_reader.dto.RequestFilter;
 import utc2.itk62.e_reader.dto.RoleResponse;
 import utc2.itk62.e_reader.dto.UpdateRoleRequest;
 import utc2.itk62.e_reader.service.RoleService;
@@ -34,7 +37,7 @@ public class RoleController {
                 .build();
 
         String message = messageSource.getMessage("role.created.success", null, locale);
-        return HTTPResponse.success(message,roleResponse);
+        return HTTPResponse.success(message, roleResponse);
     }
 
     @PutMapping("/{id}")
@@ -58,10 +61,11 @@ public class RoleController {
                 .build();
         return HTTPResponse.success(roleResponse);
     }
-    @GetMapping
-    public ResponseEntity<HTTPResponse> getAllRole() {
 
-        List<RoleResponse> roleResponses = roleService.getAllRole()
+    @PostMapping("/filter")
+    public ResponseEntity<HTTPResponse> getAllRole(@RequestBody RequestFilter<RoleFilter> filter) {
+
+        List<RoleResponse> roleResponses = roleService.getAllRole(filter.getFilter(), filter.getPagination())
                 .stream().map(role -> RoleResponse.builder()
                         .id(role.getId())
                         .roleName(role.getRoleName().toString())
@@ -74,7 +78,7 @@ public class RoleController {
     public ResponseEntity<HTTPResponse> deleteRole(@PathVariable long id) {
 
         String message = "";
-        if(roleService.deleteRole(id)){
+        if (roleService.deleteRole(id)) {
             message = "Delete role successfully";
         }
 

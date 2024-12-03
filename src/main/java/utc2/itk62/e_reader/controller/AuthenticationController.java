@@ -38,18 +38,7 @@ public class AuthenticationController {
         User user = authenticationService.login(loginRequest.getEmail(), loginRequest.getPassword());
         TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), user.getId());
         String token = tokenService.generateAccessToken(tokenPayload);
-
-        Cookie cookie = new Cookie("accessToken", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        int duration = Math.toIntExact(Duration
-                .between(tokenPayload.getIssuedAt(), tokenPayload.getExpiredAt())
-                .getSeconds());
-        cookie.setMaxAge(duration);
-        response.addCookie(cookie);
-
-        return HTTPResponse.success(translator.translate(MessageCode.LOGIN_SUCCESS, user.getEmail()),new LoginResponse(token));
+        return HTTPResponse.success(translator.translate(MessageCode.LOGIN_SUCCESS, user.getEmail()), new LoginResponse(token));
     }
 
     @PostMapping("/register")
