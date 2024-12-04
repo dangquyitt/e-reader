@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.User;
-import utc2.itk62.e_reader.exception.AuthenticationException;
-import utc2.itk62.e_reader.exception.DuplicateException;
+import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.UserRepository;
 import utc2.itk62.e_reader.service.AuthenticationService;
 
@@ -18,19 +17,18 @@ import utc2.itk62.e_reader.service.AuthenticationService;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Translator translator;
 
     @Override
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.error("AuthenticationServiceImpl | email: {} not exists", email);
-                    return new AuthenticationException(translator.translate(MessageCode.USER_CREDENTIALS_INVALID));
+                    return new EReaderException(MessageCode.USER_CREDENTIALS_INVALID);
                 });
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             log.error("AuthenticationServiceImpl | password invalid");
-            throw new AuthenticationException(translator.translate(MessageCode.USER_CREDENTIALS_INVALID));
+            throw new EReaderException(MessageCode.USER_CREDENTIALS_INVALID);
         }
 
         return user;
@@ -41,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.findByEmail(email)
                 .ifPresent(value -> {
                     log.error("AuthenticationServiceImpl | email: {} already exists", email);
-                    throw new DuplicateException(translator.translate(MessageCode.USER_EMAIL_EXISTS));
+                    throw new EReaderException(MessageCode.USER_EMAIL_EXISTS);
                 });
         User user = User.builder().email(email).password(passwordEncoder.encode(password)).build();
         userRepository.save(user);

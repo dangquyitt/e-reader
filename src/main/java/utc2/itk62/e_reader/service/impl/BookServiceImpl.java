@@ -15,8 +15,7 @@ import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
-import utc2.itk62.e_reader.exception.NotFoundException;
-
+import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.BookRepository;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
@@ -27,7 +26,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
-    private final Translator translator;
     private final BookRepository bookRepository;
     private final FileService fileService;
 
@@ -51,7 +49,7 @@ public class BookServiceImpl implements BookService {
     public boolean deleteBook(Long id) {
         var book = bookRepository.findById(id).orElseThrow(() -> {
             log.error("BookServiceImpl | id: {} not found", id);
-            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
+            return new EReaderException(MessageCode.BOOK_ID_NOT_FOUND);
         });
         fileService.deleteFile(book.getFileUrl());
         bookRepository.deleteById(id);
@@ -62,7 +60,7 @@ public class BookServiceImpl implements BookService {
     public Book updateBook(UpdateBookParam updateBookParam) {
         Book book = bookRepository.findById(updateBookParam.getId()).orElseThrow(() -> {
             log.error("BookServiceImpl | id: {} not found", updateBookParam.getId());
-            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
+            return new EReaderException(MessageCode.BOOK_ID_NOT_FOUND);
         });
         fileService.deleteFile(book.getFileUrl());
         fileService.deleteFile(book.getCoverImageUrl());
@@ -80,7 +78,7 @@ public class BookServiceImpl implements BookService {
     public Book getBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> {
             log.error("BookServiceImpl | id: {} not found", id);
-            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
+            return new EReaderException(MessageCode.BOOK_ID_NOT_FOUND);
         });
 
     }

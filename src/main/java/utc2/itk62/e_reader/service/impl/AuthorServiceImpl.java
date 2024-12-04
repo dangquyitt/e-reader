@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.Author;
-import utc2.itk62.e_reader.exception.NotFoundException;
+import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.AuthorRepository;
 import utc2.itk62.e_reader.repository.BookRepository;
 import utc2.itk62.e_reader.service.AuthorService;
@@ -33,7 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean deleteAuthor(long id) {
         var author = authorRepository.findById(id).orElseThrow(() -> {
             log.error("AuthorServiceImpl | id: {} not found", id);
-            return new NotFoundException(translator.translate(MessageCode.AUTHOR_ID_NOT_FOUND));
+            return new EReaderException(MessageCode.AUTHOR_ID_NOT_FOUND);
         });
         authorRepository.delete(author);
         return !authorRepository.existsById(id);
@@ -43,7 +43,7 @@ public class AuthorServiceImpl implements AuthorService {
     public Author updateAuthor(String authorName, long id) {
         var author = authorRepository.findById(id).orElseThrow(() -> {
             log.error("AuthorServiceImpl | id: {} not found", id);
-            return new NotFoundException(translator.translate(MessageCode.AUTHOR_ID_NOT_FOUND));
+            return new EReaderException(MessageCode.AUTHOR_ID_NOT_FOUND);
         });
         author.setName(authorName);
         return authorRepository.save(author);
@@ -53,7 +53,7 @@ public class AuthorServiceImpl implements AuthorService {
     public Author getAuthor(long id) {
         return authorRepository.findById(id).orElseThrow(() -> {
             log.error("AuthorServiceImpl | id: {} not found", id);
-            return new NotFoundException(translator.translate(MessageCode.AUTHOR_ID_NOT_FOUND));
+            return new EReaderException(MessageCode.AUTHOR_ID_NOT_FOUND);
         });
     }
 
@@ -64,13 +64,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author getAuthorByBookId(long bookId) {
-        var book = bookRepository.findById(bookId).orElseThrow(() -> {
-            return new NotFoundException(translator.translate(MessageCode.BOOK_ID_NOT_FOUND));
-        });
+        var book = bookRepository.findById(bookId).orElseThrow(() ->
+                new EReaderException(MessageCode.BOOK_ID_NOT_FOUND)
+        );
         try {
             return authorRepository.findAuthorByBookId(book.getId());
-        }catch (Exception e){
-            throw new NotFoundException(translator.translate(MessageCode.AUTHOR_BOOK_ID_NOT_FOUND));
+        } catch (Exception e) {
+            throw new EReaderException(MessageCode.AUTHOR_BOOK_ID_NOT_FOUND);
         }
     }
 }

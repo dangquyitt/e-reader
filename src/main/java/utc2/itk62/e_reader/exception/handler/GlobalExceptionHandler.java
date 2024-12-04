@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
-import utc2.itk62.e_reader.exception.AuthenticationException;
-import utc2.itk62.e_reader.exception.DuplicateException;
-import utc2.itk62.e_reader.exception.NotFoundException;
+import utc2.itk62.e_reader.exception.EReaderException;
+
+import java.util.Locale;
 
 
 @RestControllerAdvice
@@ -22,44 +22,29 @@ public class GlobalExceptionHandler {
     private final Translator translator;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<HTTPResponse> handleException(Exception ex) {
+    public ResponseEntity<HTTPResponse> handleException(Exception ex, Locale locale) {
         log.error("Exception | {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(HTTPResponse.builder()
-                        .message(translator.translate(MessageCode.ERROR_INTERNAL_SERVER))
+                        .message(translator.translate(locale, MessageCode.ERROR_INTERNAL_SERVER))
                         .build());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<HTTPResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<HTTPResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, Locale locale) {
         log.error("MethodArgumentNotValidException | {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(HTTPResponse.builder()
-                        .message(translator.translate(MessageCode.ERROR_ARGUMENTS_INVALID))
+                        .message(translator.translate(locale, MessageCode.ERROR_ARGUMENTS_INVALID))
                         .build());
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<HTTPResponse> handleNotFoundException(NotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EReaderException.class)
+    public ResponseEntity<HTTPResponse> handleEReaderException(EReaderException ex, Locale locale) {
+        log.error("EReaderException | {}", ex.getCode());
+        return ResponseEntity.badRequest()
                 .body(HTTPResponse.builder()
-                        .message(ex.getMessage())
-                        .build());
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<HTTPResponse> handleAuthenticationException(AuthenticationException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(HTTPResponse.builder()
-                        .message(ex.getMessage())
-                        .build());
-    }
-
-    @ExceptionHandler(DuplicateException.class)
-    public ResponseEntity<HTTPResponse> handleDuplicateException(DuplicateException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(HTTPResponse.builder()
-                        .message(ex.getMessage())
+                        .message(translator.translate(locale, ex.getCode(), ex.getArgs()))
                         .build());
     }
 }

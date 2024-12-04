@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import utc2.itk62.e_reader.domain.entity.Permission;
 import utc2.itk62.e_reader.domain.entity.Role;
-import utc2.itk62.e_reader.domain.enums.MethodPermission;
+import utc2.itk62.e_reader.domain.enums.PermissionMethod;
 import utc2.itk62.e_reader.repository.PermissionRepository;
 import utc2.itk62.e_reader.repository.RoleRepository;
 
@@ -35,7 +35,7 @@ public class PermissionSeeder implements CommandLineRunner {
         for (Role role : roles) {
             if (role.getRoleName().equals("USER")) {
                 List<Permission> permissions = new ArrayList<>((Collection) new Permission(
-                        MethodPermission.GET,
+                        PermissionMethod.GET,
                         "/book/" + "{" + ID_REGEX + "}",
                         new HashSet<>()));
                 if (permissionRepository.count() != permissions.size()) {

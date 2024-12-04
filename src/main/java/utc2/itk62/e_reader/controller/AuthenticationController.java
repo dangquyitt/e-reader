@@ -21,6 +21,7 @@ import utc2.itk62.e_reader.service.AuthenticationService;
 import utc2.itk62.e_reader.service.TokenService;
 
 import java.time.Duration;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -34,16 +35,16 @@ public class AuthenticationController {
     private final Translator translator;
 
     @PostMapping("/login")
-    public ResponseEntity<HTTPResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<HTTPResponse> login(@Valid @RequestBody LoginRequest loginRequest, Locale locale) {
         User user = authenticationService.login(loginRequest.getEmail(), loginRequest.getPassword());
         TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), user.getId());
         String token = tokenService.generateAccessToken(tokenPayload);
-        return HTTPResponse.success(translator.translate(MessageCode.LOGIN_SUCCESS, user.getEmail()), new LoginResponse(token));
+        return HTTPResponse.success(translator.translate(locale, MessageCode.LOGIN_SUCCESS, user.getEmail()), new LoginResponse(token));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<HTTPResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
+    public ResponseEntity<HTTPResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest, Locale locale) {
         User user = authenticationService.register(registerUserRequest.getEmail(), registerUserRequest.getPassword());
-        return HTTPResponse.success(translator.translate(MessageCode.REGISTER_SUCCESS));
+        return HTTPResponse.success(translator.translate(locale, MessageCode.REGISTER_SUCCESS));
     }
 }

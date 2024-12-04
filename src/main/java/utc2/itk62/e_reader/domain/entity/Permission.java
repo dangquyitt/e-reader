@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.MethodPermission;
+import utc2.itk62.e_reader.domain.enums.PermissionMethod;
 
 import java.util.Set;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 public class Permission extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    private MethodPermission methodPermission;
+    private PermissionMethod methodPermission;
 
     private String path;
 
