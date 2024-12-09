@@ -15,7 +15,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "reading_progresses")
-public class ReadingProgress extends BaseEntity{
+public class ReadingProgress extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,9 +25,16 @@ public class ReadingProgress extends BaseEntity{
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
+    @Column(name = "last_read_position", nullable = false)
+    private int lastReadPosition;
+
+    @Column(nullable = false)
     private int progress;
+
+    @Column(name = "completed_at")
     private Instant completedAt;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReadingStatus readingStatus;
 }

@@ -11,16 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "comments")
-public class Comment extends BaseEntity {
-    @Column(nullable = false)
-    private String content;
+@Table(name = "role_permissions")
+public class RolePermission extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
+    @JoinColumn(name = "permission_id", nullable = false)
+    private Permission permission;
+
+
 }

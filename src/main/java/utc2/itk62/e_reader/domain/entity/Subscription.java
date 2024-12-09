@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 
@@ -15,13 +14,12 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "subscriptions")
-public class Subscription extends BaseEntity{
-    private String content;
+public class Subscription extends BaseEntity {
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(name = "start_time", nullable = false)
     private Instant startTime;
 
+    @Column(name = "end_time", nullable = false)
     private Instant endTime;
 
     @ManyToOne
@@ -29,6 +27,6 @@ public class Subscription extends BaseEntity{
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "plan_id", nullable = false)
-    private Plan plan;
+    @JoinColumn(name = "price_id", nullable = false)
+    private Price price;
 }

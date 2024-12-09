@@ -16,13 +16,18 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "email_verifications")
-public class EmailVerification extends BaseEntity{
+public class EmailVerification extends BaseEntity {
 
+    @Column(name = "verification_code", nullable = false)
     private String VerificationCode;
+
+    @Column(nullable = false)
     private String email;
+
     private Instant expiredAt;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EmailVerificationStatus status;
 
 }

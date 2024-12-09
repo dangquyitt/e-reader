@@ -14,6 +14,7 @@ import utc2.itk62.e_reader.dto.RoleResponse;
 import utc2.itk62.e_reader.dto.UpdateRoleRequest;
 import utc2.itk62.e_reader.service.RoleService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -35,7 +36,6 @@ public class RoleController {
                 .id(role.getId())
                 .roleName(role.getRoleName().toString())
                 .build();
-
         String message = messageSource.getMessage("role.created.success", null, locale);
         return HTTPResponse.success(message, roleResponse);
     }

@@ -1,10 +1,7 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import utc2.itk62.e_reader.domain.enums.PermissionMethod;
 
 import java.util.Set;
@@ -18,10 +15,13 @@ import java.util.Set;
 public class Permission extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "http_method", nullable = false)
     private PermissionMethod methodPermission;
 
+    @Column(nullable = false)
     private String path;
 
-    @ManyToMany(mappedBy = "permissions", cascade = CascadeType.ALL)
-    private Set<Role> roles;
+    @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RolePermission> rolePermissions;
+
 }

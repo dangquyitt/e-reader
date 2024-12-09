@@ -7,9 +7,10 @@ import java.util.Set;
 
 @Data
 @Builder
-public class RoleResponse {
+public class PermissionResponse {
 
     private Long id;
-    private String roleName;
+    private String methodPermission;
+    private String path;
 
 }

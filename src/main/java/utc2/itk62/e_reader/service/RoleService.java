@@ -17,4 +17,6 @@ public interface RoleService {
     Role getRole(long id);
 
     List<Role> getAllRole(RoleFilter filter, Pagination pagination);
+
+
 }
