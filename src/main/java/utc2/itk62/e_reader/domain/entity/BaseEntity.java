@@ -17,10 +17,10 @@ public abstract class BaseEntity {
     protected long id;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     protected Instant createdAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     protected Instant updatedAt;
-
 }

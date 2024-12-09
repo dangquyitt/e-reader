@@ -12,8 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "collections")
-public class Collection extends BaseEntity{
+public class Collection extends BaseEntity {
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToOne
