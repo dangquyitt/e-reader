@@ -34,7 +34,7 @@ public class RoleController {
         Role role = roleService.createRole(request.getRoleName());
         RoleResponse roleResponse = RoleResponse.builder()
                 .id(role.getId())
-                .roleName(role.getRoleName().toString())
+                .roleName(role.getName().toString())
                 .build();
         String message = messageSource.getMessage("role.created.success", null, locale);
         return HTTPResponse.success(message, roleResponse);
@@ -45,7 +45,7 @@ public class RoleController {
         Role role = roleService.updateRole(request.getRoleName(), request.getId());
         RoleResponse roleResponse = RoleResponse.builder()
                 .id(role.getId())
-                .roleName(role.getRoleName().toString())
+                .roleName(role.getName().toString())
                 .build();
 
         String message = messageSource.getMessage("role.update.success", null, locale);
@@ -57,7 +57,7 @@ public class RoleController {
         Role role = roleService.getRole(id);
         RoleResponse roleResponse = RoleResponse.builder()
                 .id(role.getId())
-                .roleName(role.getRoleName().toString())
+                .roleName(role.getName().toString())
                 .build();
         return HTTPResponse.success(roleResponse);
     }
@@ -68,7 +68,7 @@ public class RoleController {
         List<RoleResponse> roleResponses = roleService.getAllRole(filter.getFilter(), filter.getPagination())
                 .stream().map(role -> RoleResponse.builder()
                         .id(role.getId())
-                        .roleName(role.getRoleName().toString())
+                        .roleName(role.getName().toString())
                         .build()).collect(Collectors.toList());
 
         return HTTPResponse.success(roleResponses);

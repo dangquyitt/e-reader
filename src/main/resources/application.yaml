@@ -42,5 +42,5 @@ application:
 
 
 user-admin:
-  email: ${ADMIN_EMAIL}
-  password: ${ADMIN_PASSWORD}
+  email: test@gmail.com
+  password: 123456

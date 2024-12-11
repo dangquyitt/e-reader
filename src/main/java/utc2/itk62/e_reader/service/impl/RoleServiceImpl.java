@@ -35,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
             throw new EReaderException(MessageCode.INVALID_ROLE_NAME);
         }
         Role role = Role.builder()
-                .roleName(parseRoleName)
+                .name(parseRoleName)
                 .build();
         return roleRepository.save(role);
     }
@@ -62,7 +62,7 @@ public class RoleServiceImpl implements RoleService {
         } catch (IllegalArgumentException e) {
             throw new EReaderException(MessageCode.INVALID_ROLE_NAME);
         }
-        role.setRoleName(parseRoleName);
+        role.setName(parseRoleName);
         return roleRepository.save(role);
     }
 
