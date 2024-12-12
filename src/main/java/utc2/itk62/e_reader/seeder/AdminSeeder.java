@@ -9,7 +9,6 @@ import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.entity.User;
 import utc2.itk62.e_reader.domain.entity.UserRole;
-import utc2.itk62.e_reader.domain.enums.RoleName;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.RoleRepository;
 import utc2.itk62.e_reader.repository.UserRepository;
