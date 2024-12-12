@@ -13,7 +13,9 @@ import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.User;
+import utc2.itk62.e_reader.domain.entity.UserRole;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
+import utc2.itk62.e_reader.domain.model.UserInfo;
 import utc2.itk62.e_reader.dto.LoginRequest;
 import utc2.itk62.e_reader.dto.LoginResponse;
 import utc2.itk62.e_reader.dto.RegisterUserRequest;
@@ -36,10 +38,10 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<HTTPResponse> login(@Valid @RequestBody LoginRequest loginRequest, Locale locale) {
-        User user = authenticationService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), user.getId());
+        UserInfo userInfo = authenticationService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), userInfo.getId(), userInfo.getRoles());
         String token = tokenService.generateAccessToken(tokenPayload);
-        return HTTPResponse.success(translator.translate(locale, MessageCode.LOGIN_SUCCESS, user.getEmail()), new LoginResponse(token));
+        return HTTPResponse.success(translator.translate(locale, MessageCode.LOGIN_SUCCESS, userInfo.getEmail()), new LoginResponse(token));
     }
 
     @PostMapping("/register")

@@ -20,6 +20,4 @@ public class MessageCode {
 
     public static final String PERMISSION_ID_NOT_FOUND = "permission.id.not_found";
     public static final String ROLE_PERMISSION_EXISTS = "role_permission_exists";
-
-
 }

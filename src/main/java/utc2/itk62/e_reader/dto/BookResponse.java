@@ -14,7 +14,7 @@ public class BookResponse {
 
     private Long id;
     private String title;
-    private String desc;
+    private String description;
     private int totalPage;
     private float rating;
     private int publishedYear;
@@ -24,7 +24,7 @@ public class BookResponse {
     public BookResponse(Book book) {
         this.id = book.getId();
         this.title = book.getTitle();
-        this.desc = book.getDescription();
+        this.description = book.getDescription();
         this.totalPage = book.getTotalPage();
         this.rating = book.getRating();
         this.publishedYear = book.getPublishedYear();

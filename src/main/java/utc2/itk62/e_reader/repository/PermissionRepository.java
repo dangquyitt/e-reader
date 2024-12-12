@@ -8,16 +8,16 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
     @Query(
             value = """
                     SELECT EXISTS(
-                        SELECT 1 
+                        SELECT 1
                         FROM permissions p
                         LEFT JOIN role_permissions rp ON rp.permission_id = p.id
                         LEFT JOIN roles r ON r.id = rp.role_id
                         LEFT JOIN user_roles ur ON ur.role_id = r.id
                         LEFT JOIN users u ON u.id = ur.user_id
-                    WHERE 
+                    WHERE
                         u.id = :userId
                         AND p.http_method = CAST(:httpMethod AS http_method)
-                        AND :path ~ p.path 
+                        AND :path ~ p.path
                     )
                     """,
             nativeQuery = true
