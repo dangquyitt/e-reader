@@ -2,7 +2,7 @@ package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import utc2.itk62.e_reader.domain.enums.PermissionMethod;
+import utc2.itk62.e_reader.domain.enums.HTTPMethod;
 
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public class Permission extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "http_method", nullable = false)
-    private PermissionMethod methodPermission;
+    private HTTPMethod httpMethod;
 
     @Column(nullable = false)
     private String path;

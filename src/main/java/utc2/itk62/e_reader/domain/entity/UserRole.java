@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.RoleName;
-
-import java.util.Set;
 
 @Builder
 @NoArgsConstructor

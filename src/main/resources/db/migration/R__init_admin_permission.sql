@@ -7,7 +7,13 @@ INSERT INTO permissions (http_method, path)
 VALUES
     ('GET', '/api/roles$'),
     ('POST', '/api/roles$'),
-    ('GET', '/api/roles/\d+')
+    ('GET', '/api/roles/\d+'),
+
+    -- Book
+    ('POST', '/api/books$'),
+    ('PUT', '/api/books/\d+'),
+    ('DELETE', '/api/books/\d+')
+
     ON CONFLICT (http_method, path)
     DO NOTHING
     RETURNING id

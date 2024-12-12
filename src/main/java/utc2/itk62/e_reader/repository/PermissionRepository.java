@@ -1,10 +1,26 @@
 package utc2.itk62.e_reader.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import utc2.itk62.e_reader.domain.entity.Permission;
-import utc2.itk62.e_reader.domain.entity.Role;
-import utc2.itk62.e_reader.domain.enums.RoleName;
 
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
-    boolean existsByPath(String path);
+    @Query(
+            value = """
+                    SELECT EXISTS(
+                        SELECT 1 
+                        FROM permissions p
+                        LEFT JOIN role_permissions rp ON rp.permission_id = p.id
+                        LEFT JOIN roles r ON r.id = rp.role_id
+                        LEFT JOIN user_roles ur ON ur.role_id = r.id
+                        LEFT JOIN users u ON u.id = ur.user_id
+                    WHERE 
+                        u.id = :userId
+                        AND p.http_method = CAST(:httpMethod AS http_method)
+                        AND :path ~ p.path 
+                    )
+                    """,
+            nativeQuery = true
+    )
+    boolean existsPermission(Long userId, String httpMethod, String path);
 }
