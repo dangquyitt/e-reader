@@ -27,6 +27,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     private final MailService mailService;
 
     @Override
+    @Transactional
     public void verify(String verificationCode) {
         EmailVerification emailVerification = emailVerificationRepository.findByVerificationCode(verificationCode).orElseThrow(() -> new EReaderException(""));
 
@@ -39,9 +40,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         }
 
         if (emailVerification.getExpiredAt().isBefore(Instant.now())) {
-            Thread.startVirtualThread(() -> {
-                emailVerificationRepository.updateStatusByEmail(emailVerification.getEmail(), EmailVerificationStatus.EXPIRED);
-            });
+            emailVerificationRepository.updateStatusByEmail(emailVerification.getEmail(), EmailVerificationStatus.EXPIRED);
             throw new EReaderException(MessageCode.EMAIL_VERIFICATION_CODE_EXPIRED);
         }
 
@@ -52,9 +51,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         User user = userRepository.findByEmail(emailVerification.getEmail()).orElseThrow(() -> new EReaderException(MessageCode.USER_EMAIL_NOT_EXISTS));
 
         if (user.getEmailVerifiedAt() != null) {
-            Thread.startVirtualThread(() -> {
-                emailVerificationRepository.updateStatusByEmail(emailVerification.getEmail(), EmailVerificationStatus.EXPIRED);
-            });
+            emailVerificationRepository.updateStatusByEmail(emailVerification.getEmail(), EmailVerificationStatus.EXPIRED);
             throw new EReaderException(MessageCode.USER_ALREADY_VERIFIED);
         }
 
@@ -74,7 +71,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         emailVerification.setExpiredAt(Instant.now().plus(Duration.ofDays(1)));
         emailVerificationRepository.save(emailVerification);
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("verificationURL", "http://localhost:8080/emailVerifications/verify?verificationCode=" + emailVerification.getVerificationCode());
+        dataModel.put("verificationURL", "http://localhost:8080/api/emailVerifications/verify?verificationCode=" + emailVerification.getVerificationCode());
         mailService.send(email, "E-Reader email verification", "emailVerification.ftlh", dataModel);
         emailVerification.setStatus(EmailVerificationStatus.SENT);
         emailVerificationRepository.save(emailVerification);

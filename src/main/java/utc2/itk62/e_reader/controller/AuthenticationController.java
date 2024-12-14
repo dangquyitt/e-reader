@@ -13,10 +13,7 @@ import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.User;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.domain.model.UserInfo;
-import utc2.itk62.e_reader.dto.auth.LoginRequest;
-import utc2.itk62.e_reader.dto.auth.LoginResponse;
-import utc2.itk62.e_reader.dto.auth.RegisterUserRequest;
-import utc2.itk62.e_reader.dto.auth.ResendVerifyRequest;
+import utc2.itk62.e_reader.dto.auth.*;
 import utc2.itk62.e_reader.service.AuthenticationService;
 import utc2.itk62.e_reader.service.TokenService;
 

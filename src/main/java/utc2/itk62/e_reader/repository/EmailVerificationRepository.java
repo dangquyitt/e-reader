@@ -13,6 +13,6 @@ public interface EmailVerificationRepository extends JpaRepository<EmailVerifica
     Optional<EmailVerification> findByVerificationCode(String verificationCode);
 
     @Modifying
-    @Query("update EmailVerification ev set ev.status = :status where ev.email = :email")
+    @Query("update EmailVerification ev set ev.status = :status where ev.email = :email AND ev.status != :status")
     void updateStatusByEmail(String email, String status);
 }

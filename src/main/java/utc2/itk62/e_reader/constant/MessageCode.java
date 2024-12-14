@@ -12,11 +12,13 @@ public class MessageCode {
     public static final String USER_CREDENTIALS_INVALID = "user.credentials.invalid";
     public static final String USER_EMAIL_NOT_EXISTS = "user.email.not_exists";
     public static final String USER_ALREADY_VERIFIED = "user.already_verified";
+    public static final String USER_ID_NOT_FOUND = "user.id.not_found";
+    public static final String CHANGE_PASSWORD_INCORRECT = "change.password.incorrect";
+    public static final String CHANGE_PASSWORD_SUCCESS = "change.password.success";
 
     public static final String EMAIL_VERIFICATION_CODE_EXPIRED = "email_verification.code.expired";
     public static final String EMAIL_VERIFICATION_STATUS_USED = "email_verification.status.used";
     public static final String EMAIL_VERIFICATION_CODE_INVALID = "email_verification.code.invalid";
-    public static final String EMAIL_VERIFICATION_FAILED = "email_verification.failed";
 
 
     public static final String BOOK_ID_NOT_FOUND = "book.id.not_found";

@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.constant.MessageCode;
+import utc2.itk62.e_reader.constant.RoleName;
 import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.entity.User;
+import utc2.itk62.e_reader.domain.entity.UserRole;
 import utc2.itk62.e_reader.domain.model.UserInfo;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.RoleRepository;
@@ -61,8 +63,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     throw new EReaderException(MessageCode.USER_EMAIL_EXISTS);
                 });
         User user = User.builder().email(email).password(passwordEncoder.encode(password)).build();
-
         userRepository.save(user);
+        Role role = roleRepository.findByName(RoleName.USER).orElseThrow(() -> new EReaderException(MessageCode.INVALID_ROLE_NAME));
+        userRoleRepository.save(new UserRole(user, role));
         Thread.startVirtualThread(() -> {
             emailVerificationService.sendEmailVerificationCode(user.getEmail());
         });
