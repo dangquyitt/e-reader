@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.entity.User;
-import utc2.itk62.e_reader.domain.entity.UserRole;
 import utc2.itk62.e_reader.domain.model.UserInfo;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.RoleRepository;
 import utc2.itk62.e_reader.repository.UserRepository;
 import utc2.itk62.e_reader.repository.UserRoleRepository;
 import utc2.itk62.e_reader.service.AuthenticationService;
+import utc2.itk62.e_reader.service.EmailVerificationService;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final EmailVerificationService emailVerificationService;
 
     @Override
     public UserInfo login(String email, String password) {
@@ -39,6 +39,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.error("AuthenticationServiceImpl | password invalid");
             throw new EReaderException(MessageCode.USER_CREDENTIALS_INVALID);
         }
+
+        // TODO: Throw an error and messages accordingly
+        if (user.getEmailVerifiedAt() == null) {
+
+        }
+
         List<Role> roles = roleRepository.findAllByUserId(user.getId());
         UserInfo userInfo = new UserInfo();
         userInfo.setEmail(user.getEmail());
@@ -55,7 +61,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     throw new EReaderException(MessageCode.USER_EMAIL_EXISTS);
                 });
         User user = User.builder().email(email).password(passwordEncoder.encode(password)).build();
+
         userRepository.save(user);
+        Thread.startVirtualThread(() -> {
+            emailVerificationService.sendEmailVerificationCode(user.getEmail());
+        });
+
         return user;
+    }
+
+    @Override
+    public void resendVerify(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("AuthenticationServiceImpl | {} ", email);
+                    return new EReaderException(MessageCode.USER_EMAIL_NOT_EXISTS);
+                });
+
+        if (user.getEmailVerifiedAt() != null) {
+            throw new EReaderException(MessageCode.USER_ALREADY_VERIFIED);
+        }
+
+        Thread.startVirtualThread(() -> {
+            emailVerificationService.sendEmailVerificationCode(user.getEmail());
+        });
     }
 }

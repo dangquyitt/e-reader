@@ -13,16 +13,16 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "book_tags", schema = "public", indexes = {
-        @Index(name = "book_tags_book_id_tag_id_idx", columnList = "book_id, tag_id", unique = true)
+@Table(name = "book_collections", schema = "public", indexes = {
+        @Index(name = "book_collections_book_id_collection_id_idx", columnList = "book_id, collection_id", unique = true)
 })
-public class BookTag extends BaseEntity {
+public class BookCollection extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
-    private Tag tag;
+    @JoinColumn(name = "collection_id")
+    private Collection collection;
 
 }

@@ -1,34 +1,31 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.RoleName;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
+@Table(name = "roles", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(name = "roles_name_key", columnNames = {"name"})
+})
+public class Role extends BaseEntity {
+    @NotNull
+    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false, unique = true)
-    private RoleName name;
+    @OneToMany(mappedBy = "role")
+    private Set<RolePermission> rolePermissions = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRole> userRoles;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RolePermission> rolePermissions;
-
-
+    @OneToMany(mappedBy = "role")
+    private Set<UserRole> userRoles = new LinkedHashSet<>();
 }

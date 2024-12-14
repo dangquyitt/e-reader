@@ -1,7 +1,5 @@
 package utc2.itk62.e_reader.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +11,15 @@ import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.User;
-import utc2.itk62.e_reader.domain.entity.UserRole;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.domain.model.UserInfo;
-import utc2.itk62.e_reader.dto.LoginRequest;
-import utc2.itk62.e_reader.dto.LoginResponse;
-import utc2.itk62.e_reader.dto.RegisterUserRequest;
+import utc2.itk62.e_reader.dto.auth.LoginRequest;
+import utc2.itk62.e_reader.dto.auth.LoginResponse;
+import utc2.itk62.e_reader.dto.auth.RegisterUserRequest;
+import utc2.itk62.e_reader.dto.auth.ResendVerifyRequest;
 import utc2.itk62.e_reader.service.AuthenticationService;
 import utc2.itk62.e_reader.service.TokenService;
 
-import java.time.Duration;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -48,5 +45,12 @@ public class AuthenticationController {
     public ResponseEntity<HTTPResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest, Locale locale) {
         User user = authenticationService.register(registerUserRequest.getEmail(), registerUserRequest.getPassword());
         return HTTPResponse.success(translator.translate(locale, MessageCode.REGISTER_SUCCESS));
+    }
+
+    @PostMapping("/verify/resend")
+    public ResponseEntity<HTTPResponse> resend(@RequestBody ResendVerifyRequest request) {
+        authenticationService.resendVerify(request.getEmail());
+        // TODO: create message
+        return HTTPResponse.success("Resend verification code successfully");
     }
 }

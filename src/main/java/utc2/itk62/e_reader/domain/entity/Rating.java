@@ -1,26 +1,35 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.Instant;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "ratings")
+@Table(name = "ratings", schema = "public", indexes = {
+        @Index(name = "ratings_user_id_book_id_idx", columnList = "user_id, book_id", unique = true)
+})
 public class Rating extends BaseEntity {
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Column(nullable = false)
-    private float rating;
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "rating", nullable = false)
+    private Double rating;
+
 }

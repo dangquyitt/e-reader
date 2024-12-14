@@ -1,67 +1,70 @@
 package utc2.itk62.e_reader.domain.entity;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "books")
+@Table(name = "books", schema = "public")
 public class Book extends BaseEntity {
-
-    @Column(nullable = false)
+    @NotNull
+    @ColumnDefault("''")
+    @Column(name = "title", nullable = false, length = Integer.MAX_VALUE)
     private String title;
 
-    @Column(nullable = false)
+    @NotNull
+    @ColumnDefault("''")
+    @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "total_page", nullable = false)
-    private int totalPage;
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "\"totalPage\"", nullable = false)
+    private Integer totalPage;
 
-    private float rating;
+    @Column(name = "rating")
+    private Double rating;
 
     @Column(name = "published_year")
-    private int publishedYear;
+    private Integer publishedYear;
 
-    @Column(name = "cover_image_url", nullable = false)
+    @NotNull
+    @Column(name = "cover_image_url", nullable = false, length = Integer.MAX_VALUE)
     private String coverImageUrl;
 
-    @Column(name = "file_url", nullable = false)
+    @NotNull
+    @Column(name = "file_url", nullable = false, length = Integer.MAX_VALUE)
     private String fileUrl;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Favorite> favorites;
+    @OneToMany(mappedBy = "book")
+    private Set<BookAuthor> bookAuthors = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "book")
+    private Set<BookCollection> bookCollections = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReadingProgress> readingProgresses;
+    @OneToMany(mappedBy = "book")
+    private Set<BookTag> bookTags = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Rating> ratings;
+    @OneToMany(mappedBy = "book")
+    private Set<Comment> comments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookTag> bookTags;
+    @OneToMany(mappedBy = "book")
+    private Set<Favorite> favorites = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookAuthor> bookAuthors;
+    @OneToMany(mappedBy = "book")
+    private Set<Rating> ratings = new LinkedHashSet<>();
 
-    @ManyToMany
-    private Set<Collection> collections;
-
-    @ManyToMany
-    private Set<Author> authors;
-
-    @ManyToMany
-    private Set<Tag> tags;
+    @OneToMany(mappedBy = "book")
+    private Set<ReadingProgress> readingProgresses = new LinkedHashSet<>();
 
 }

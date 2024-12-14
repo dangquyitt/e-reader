@@ -26,7 +26,6 @@ public class AuthorController {
     private final AuthorService authorService;
 
 
-
     @PostMapping
     public ResponseEntity<HTTPResponse> create(@RequestBody CreateAuthorRequest request, Locale locale) {
         Author author = authorService.createAuthor(request.getAuthorName());
@@ -36,7 +35,7 @@ public class AuthorController {
                 .build();
 
         String message = messageSource.getMessage("author.created", null, locale);
-        return HTTPResponse.success(message,authorResponse);
+        return HTTPResponse.success(message, authorResponse);
     }
 
     @PutMapping("/{id}")
@@ -60,6 +59,7 @@ public class AuthorController {
                 .build();
         return HTTPResponse.success(roleResponse);
     }
+
     @GetMapping
     public ResponseEntity<HTTPResponse> getAllRole() {
 
@@ -76,7 +76,7 @@ public class AuthorController {
     public ResponseEntity<HTTPResponse> deleteRole(@PathVariable long id) {
 
         String message = "";
-        if(authorService.deleteAuthor(id)){
+        if (authorService.deleteAuthor(id)) {
             message = "Delete author successfully";
         }
 
@@ -84,7 +84,7 @@ public class AuthorController {
     }
 
     @GetMapping("/books/{id}")
-    public ResponseEntity<HTTPResponse> getAuthorByBookId(@PathVariable long id){
+    public ResponseEntity<HTTPResponse> getAuthorByBookId(@PathVariable long id) {
         Author author = authorService.getAuthorByBookId(id);
         AuthorResponse authorResponse = AuthorResponse.builder()
                 .id(author.getId())

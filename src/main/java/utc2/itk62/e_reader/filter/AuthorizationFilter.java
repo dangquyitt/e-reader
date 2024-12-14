@@ -35,11 +35,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         }
 
         TokenPayload payload = (TokenPayload) authentication.getPrincipal();
-        if (!permissionRepository.existsPermission(payload.getUserId(), httpMethod, requestURI)) {
-            log.error("URI: {}. Method: {}", requestURI, httpMethod);
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "message goes here");
-            return;
-        }
+//        if (!permissionRepository.existsPermission(payload.getUserId(), httpMethod, requestURI)) {
+//            log.error("URI: {}. Method: {}", requestURI, httpMethod);
+//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "message goes here");
+//            return;
+//        }
 
         filterChain.doFilter(request, response);
     }

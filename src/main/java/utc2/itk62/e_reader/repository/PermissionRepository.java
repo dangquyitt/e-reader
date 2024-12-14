@@ -2,8 +2,11 @@ package utc2.itk62.e_reader.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import utc2.itk62.e_reader.domain.entity.Permission;
 
+
+@Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
     @Query(
             value = """
@@ -16,7 +19,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
                         LEFT JOIN users u ON u.id = ur.user_id
                     WHERE
                         u.id = :userId
-                        AND p.http_method = CAST(:httpMethod AS http_method)
+                        AND p.http_method = :httpMethod
                         AND :path ~ p.path
                     )
                     """,

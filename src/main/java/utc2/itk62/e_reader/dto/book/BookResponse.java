@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.dto;
+package utc2.itk62.e_reader.dto.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public class BookResponse {
     private String title;
     private String description;
     private int totalPage;
-    private float rating;
+    private Double rating;
     private int publishedYear;
     private String coverImageUrl;
     private String fileUrl;

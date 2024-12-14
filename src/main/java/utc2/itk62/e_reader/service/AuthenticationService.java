@@ -7,4 +7,6 @@ public interface AuthenticationService {
     UserInfo login(String email, String password);
 
     User register(String email, String password);
+
+    void resendVerify(String email);
 }

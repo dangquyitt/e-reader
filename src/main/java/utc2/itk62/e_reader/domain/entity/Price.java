@@ -1,27 +1,39 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.Currency;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "prices")
+@Table(name = "prices", schema = "public")
 public class Price extends BaseEntity {
-    private Double amount;
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "amount", nullable = false, precision = 18, scale = 2)
+    private BigDecimal amount;
 
-    @Enumerated(EnumType.STRING)
-    private Currency currency;
+    @NotNull
+    @ColumnDefault("'USD'")
+    @Column(name = "currency", nullable = false, length = Integer.MAX_VALUE)
+    private String currency;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "plan_id", nullable = false)
     private Plan plan;
 
+    @OneToMany(mappedBy = "price")
+    private Set<Subscription> subscriptions = new LinkedHashSet<>();
 
 }

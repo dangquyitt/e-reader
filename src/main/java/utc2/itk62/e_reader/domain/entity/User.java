@@ -1,49 +1,53 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(name = "users_email_key", columnNames = {"email"})
+})
 public class User extends BaseEntity {
-
-    @Column(nullable = false, unique = true)
+    @NotNull
+    @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
     private String email;
-
-    private String password;
 
     @Column(name = "email_verified_at")
     private Instant emailVerifiedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Favorite> favorites;
+    @Column(name = "password", length = Integer.MAX_VALUE)
+    private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "user")
+    private Set<Collection> collections = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReadingProgress> readingProgresses;
+    @OneToMany(mappedBy = "user")
+    private Set<Comment> comments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Rating> ratings;
+    @OneToMany(mappedBy = "user")
+    private Set<Favorite> favorites = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Collection> collections;
+    @OneToMany(mappedBy = "user")
+    private Set<Rating> ratings = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Subscription> subscriptions;
+    @OneToMany(mappedBy = "user")
+    private Set<ReadingProgress> readingProgresses = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRole> userRoles;
+    @OneToMany(mappedBy = "user")
+    private Set<Subscription> subscriptions = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserRole> userRoles = new LinkedHashSet<>();
 
 }

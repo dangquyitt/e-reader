@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.Role;
-import utc2.itk62.e_reader.domain.enums.RoleName;
 import utc2.itk62.e_reader.domain.model.RoleFilter;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.PermissionRepository;
@@ -28,14 +27,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(String roleName) {
-        RoleName parseRoleName;
-        try {
-            parseRoleName = RoleName.valueOf(roleName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new EReaderException(MessageCode.INVALID_ROLE_NAME);
-        }
         Role role = Role.builder()
-                .name(parseRoleName)
+                .name(roleName)
                 .build();
         return roleRepository.save(role);
     }
@@ -56,13 +49,8 @@ public class RoleServiceImpl implements RoleService {
             log.error("RoleServiceImpl | id: {}", id);
             return new EReaderException(MessageCode.ROLE_ID_NOT_FOUND);
         });
-        RoleName parseRoleName;
-        try {
-            parseRoleName = RoleName.valueOf(roleName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new EReaderException(MessageCode.INVALID_ROLE_NAME);
-        }
-        role.setName(parseRoleName);
+
+        role.setName(roleName);
         return roleRepository.save(role);
     }
 
