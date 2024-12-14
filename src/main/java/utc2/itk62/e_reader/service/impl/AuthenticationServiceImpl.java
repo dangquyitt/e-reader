@@ -23,6 +23,7 @@ import utc2.itk62.e_reader.service.EmailVerificationService;
 import utc2.itk62.e_reader.service.ResetPasswordService;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     log.error("AuthenticationServiceImpl | email: {} not exists", email);
                     return new EReaderException(MessageCode.USER_CREDENTIALS_INVALID);
                 });
+
+        if (user.getPassword() == null) {
+            throw new EReaderException(MessageCode.USER_CREDENTIALS_INVALID);
+        }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             log.error("AuthenticationServiceImpl | password invalid");
@@ -79,7 +84,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
             Optional<User> userOp = userRepository.findByEmail(email);
             if (userOp.isEmpty()) {
-                userOp = Optional.of(User.builder().email(email).build());
+                userOp = Optional.of(User.builder().email(email).emailVerifiedAt(Instant.now()).build());
                 userRepository.save(userOp.get());
             }
             User user = userOp.get();
