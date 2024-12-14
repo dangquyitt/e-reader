@@ -3,10 +3,7 @@ package utc2.itk62.e_reader.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
@@ -44,10 +41,30 @@ public class AuthenticationController {
         return HTTPResponse.success(translator.translate(locale, MessageCode.REGISTER_SUCCESS));
     }
 
-    @PostMapping("/verify/resend")
-    public ResponseEntity<HTTPResponse> resend(@RequestBody ResendVerifyRequest request) {
-        authenticationService.resendVerify(request.getEmail());
-        // TODO: create message
+    @GetMapping("/verifyEmail")
+    public ResponseEntity<HTTPResponse> verificationCode(@RequestParam String verificationCode, Locale locale) {
+        authenticationService.verifyEmail(verificationCode);
+        return HTTPResponse.success(translator.translate(locale, MessageCode.EMAIL_VERIFICATION_SUCCESS));
+    }
+
+    @PostMapping("/verifyEmail/send")
+    public ResponseEntity<HTTPResponse> resend(@RequestBody EmailRequest request) {
+        authenticationService.sendVerifyEmail(request.getEmail());
+        // TODO: create message code
         return HTTPResponse.success("Resend verification code successfully");
+    }
+
+    @PostMapping("/resetPassword/send")
+    public ResponseEntity<HTTPResponse> resetPassword(@RequestBody EmailRequest email) {
+        authenticationService.sendResetPassword(email.getEmail());
+        // TODO: create message code
+        return HTTPResponse.success("Send reset password successfully");
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<HTTPResponse> resetPassword(@RequestBody ResetPasswordRequest request) {
+        authenticationService.resetPassword(request.getEmail(), request.getPassword(), request.getToken());
+        // TODO: create message code
+        return HTTPResponse.success("Reset password successfully");
     }
 }

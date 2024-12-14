@@ -8,5 +8,11 @@ public interface AuthenticationService {
 
     User register(String email, String password);
 
-    void resendVerify(String email);
+    void sendVerifyEmail(String email);
+
+    void verifyEmail(String verificationCode);
+
+    void sendResetPassword(String email);
+
+    void resetPassword(String email, String password, String code);
 }

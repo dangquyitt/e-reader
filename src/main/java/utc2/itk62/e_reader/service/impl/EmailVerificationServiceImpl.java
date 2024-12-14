@@ -40,7 +40,8 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         }
 
         if (emailVerification.getExpiredAt().isBefore(Instant.now())) {
-            emailVerificationRepository.updateStatusByEmail(emailVerification.getEmail(), EmailVerificationStatus.EXPIRED);
+            emailVerification.setStatus(EmailVerificationStatus.EXPIRED);
+            emailVerificationRepository.save(emailVerification);
             throw new EReaderException(MessageCode.EMAIL_VERIFICATION_CODE_EXPIRED);
         }
 
@@ -56,6 +57,8 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         }
 
         user.setEmailVerifiedAt(Instant.now());
+        emailVerification.setStatus(EmailVerificationStatus.USED);
+        emailVerificationRepository.save(emailVerification);
         userRepository.save(user);
     }
 
