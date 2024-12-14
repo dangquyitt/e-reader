@@ -67,4 +67,12 @@ public class AuthenticationController {
         // TODO: create message code
         return HTTPResponse.success("Reset password successfully");
     }
+
+    @PostMapping("googleLogin")
+    public ResponseEntity<HTTPResponse> loginWithGoogle(@Valid @RequestBody GoogleLoginRequest googleLoginRequest, Locale locale) {
+        UserInfo userInfo = authenticationService.loginWithGoogle(googleLoginRequest.getIdTokenString());
+        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), userInfo.getId(), userInfo.getRoles());
+        String token = tokenService.generateAccessToken(tokenPayload);
+        return HTTPResponse.success(translator.translate(locale, MessageCode.LOGIN_SUCCESS, userInfo.getEmail()), new LoginResponse(token));
+    }
 }
