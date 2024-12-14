@@ -8,6 +8,17 @@ CREATE TABLE "users"
     "password"          varchar
 );
 
+CREATE TABLE "reset_password_request"
+(
+    "id"         BIGSERIAL PRIMARY KEY,
+    "created_at" timestamp NOT NULL DEFAULT (now()),
+    "updated_at" timestamp NOT NULL DEFAULT (now()),
+    "token"      varchar   NOT NULL,
+    "email"      varchar   NOT NULL,
+    "expired_at" timestamp,
+    "status"     varchar   NOT NULL DEFAULT 'PENDING'
+);
+
 CREATE TABLE "email_verifications"
 (
     "id"                BIGSERIAL PRIMARY KEY,
