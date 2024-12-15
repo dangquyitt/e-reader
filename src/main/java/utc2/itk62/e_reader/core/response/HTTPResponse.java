@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,6 +16,7 @@ import utc2.itk62.e_reader.core.pagination.Pagination;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HTTPResponse {
     private String message;
+    private String code;
     private Object data;
     private Pagination pagination;
 

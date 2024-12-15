@@ -1,6 +1,8 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utc2.itk62.e_reader.constant.EmailVerificationStatus;
@@ -20,8 +22,10 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmailVerificationServiceImpl implements EmailVerificationService {
+    @Value("${application.client.url}")
+    private String CLIENT_URL;
     private final UserRepository userRepository;
     private final EmailVerificationRepository emailVerificationRepository;
     private final MailService mailService;
@@ -29,7 +33,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Override
     @Transactional
     public void verify(String verificationCode) {
-        EmailVerification emailVerification = emailVerificationRepository.findByVerificationCode(verificationCode).orElseThrow(() -> new EReaderException(""));
+        EmailVerification emailVerification = emailVerificationRepository.findByVerificationCode(verificationCode).orElseThrow(() -> new EReaderException(MessageCode.EMAIL_VERIFICATION_CODE_INVALID));
 
         if (EmailVerificationStatus.USED.equals(emailVerification.getStatus())) {
             throw new EReaderException(MessageCode.EMAIL_VERIFICATION_STATUS_USED);
@@ -74,7 +78,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         emailVerification.setExpiredAt(Instant.now().plus(Duration.ofDays(1)));
         emailVerificationRepository.save(emailVerification);
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("verificationURL", "http://localhost:8080/api/emailVerifications/verify?verificationCode=" + emailVerification.getVerificationCode());
+        dataModel.put("verificationURL", CLIENT_URL + "/emailVerification?verificationCode=" + emailVerification.getVerificationCode());
         mailService.send(email, "E-Reader email verification", "emailVerification.ftlh", dataModel);
         emailVerification.setStatus(EmailVerificationStatus.SENT);
         emailVerificationRepository.save(emailVerification);

@@ -55,17 +55,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/resetPassword/send")
-    public ResponseEntity<HTTPResponse> resetPassword(@RequestBody EmailRequest email) {
+    public ResponseEntity<HTTPResponse> resetPassword(@RequestBody EmailRequest email, Locale locale) {
         authenticationService.sendResetPassword(email.getEmail());
-        // TODO: create message code
-        return HTTPResponse.success("Send reset password successfully");
+        return HTTPResponse.success(translator.translate(locale, MessageCode.RESET_PASSWORD_REQUEST_SUCCESS));
     }
 
     @PostMapping("/resetPassword")
-    public ResponseEntity<HTTPResponse> resetPassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<HTTPResponse> resetPassword(@RequestBody ResetPasswordRequest request, Locale locale) {
         authenticationService.resetPassword(request.getEmail(), request.getPassword(), request.getToken());
-        // TODO: create message code
-        return HTTPResponse.success("Reset password successfully");
+        return HTTPResponse.success(translator.translate(locale, MessageCode.RESET_PASSWORD_SUCCESS));
     }
 
     @PostMapping("googleLogin")

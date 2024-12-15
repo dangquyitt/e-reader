@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
         log.error("EReaderException | {}", ex.getCode());
         return ResponseEntity.badRequest()
                 .body(HTTPResponse.builder()
+                        .code(ex.getCode())
                         .message(translator.translate(locale, ex.getCode(), ex.getArgs()))
                         .build());
     }

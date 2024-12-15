@@ -54,6 +54,9 @@ google:
 application:
   bucket:
     name: uploadfileimage
+  client:
+    url:
+      http://localhost:5173/#
 
 
 user-admin:

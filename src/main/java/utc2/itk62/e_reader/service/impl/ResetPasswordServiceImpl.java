@@ -1,6 +1,8 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +25,10 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ResetPasswordServiceImpl implements ResetPasswordService {
+    @Value("${application.client.url}")
+    private String CLIENT_URL;
     private final UserRepository userRepository;
     private final ResetPasswordRequestRepository resetPasswordRequestRepository;
     private final PasswordEncoder passwordEncoder;
@@ -40,16 +44,18 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         rq.setStatus(ResetPasswordStatus.PENDING);
         rq.setExpiredAt(Instant.now().plus(Duration.ofDays(1)));
         resetPasswordRequestRepository.save(rq);
-        Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("resetPasswordURL", "http://localhost:8080/api/auth/resetPassword?token=" + rq.getToken());
-        mailService.send(email, "E-Reader reset password request", "resetPasswordRequest.ftlh", dataModel);
-        rq.setStatus(ResetPasswordStatus.SENT);
-        resetPasswordRequestRepository.save(rq);
+        Thread.startVirtualThread(() -> {
+            Map<String, Object> dataModel = new HashMap<>();
+            dataModel.put("resetPasswordURL", CLIENT_URL + "/resetPassword?email=" + rq.getEmail() + "&token=" + rq.getToken());
+            mailService.send(email, "E-Reader reset password request", "resetPasswordRequest.ftlh", dataModel);
+            rq.setStatus(ResetPasswordStatus.SENT);
+            resetPasswordRequestRepository.save(rq);
+        });
     }
 
     @Override
     public void resetPassword(String email, String password, String token) {
-        ResetPasswordRequest rpr = resetPasswordRequestRepository.findByToken(token).orElseThrow(() -> new EReaderException(""));
+        ResetPasswordRequest rpr = resetPasswordRequestRepository.findByToken(token).orElseThrow(() -> new EReaderException(MessageCode.RESET_PASSWORD_INCORRECT));
 
         if (ResetPasswordStatus.COMPLETED.equals(rpr.getStatus())) {
             throw new EReaderException(MessageCode.RESET_PASSWORD_ALREADY_COMPLETED);
