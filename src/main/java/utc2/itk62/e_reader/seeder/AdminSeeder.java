@@ -13,6 +13,7 @@ import utc2.itk62.e_reader.repository.RoleRepository;
 import utc2.itk62.e_reader.repository.UserRepository;
 import utc2.itk62.e_reader.repository.UserRoleRepository;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,7 @@ public class AdminSeeder implements CommandLineRunner {
         User user = userRepository.findByEmail(adminEmail).orElse(
                 User.builder().email(adminEmail).password(passwordEncoder.encode(adminPassword)).build()
         );
+        user.setEmailVerifiedAt(Instant.now());
         userRepository.save(user);
 
         List<Role> roles = roleRepository.findAll();

@@ -17,7 +17,7 @@ public class BookResponse {
     private String description;
     private int totalPage;
     private Double rating;
-    private int publishedYear;
+    private Integer publishedYear;
     private String coverImageUrl;
     private String fileUrl;
 
