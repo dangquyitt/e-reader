@@ -72,7 +72,7 @@ CREATE TABLE "books"
     "updated_at"      timestamp NOT NULL DEFAULT (now()),
     "title"           varchar   NOT NULL DEFAULT '',
     "description"     varchar   NOT NULL DEFAULT '',
-    "totalPage"       int       NOT NULL DEFAULT 0,
+    "total_page"      int       NOT NULL DEFAULT 0,
     "rating"          float,
     "published_year"  int,
     "cover_image_url" varchar   NOT NULL,
