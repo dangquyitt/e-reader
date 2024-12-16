@@ -10,11 +10,12 @@ import java.util.Optional;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query(
             value = """
-                    select r from Role r
-                    inner join r.userRoles ur
-                    inner join ur.user u
-                    where u.id = :userId
-                    """
+                    SELECT r.* FROM roles r
+                    INNER JOIN user_roles ur ON r.id = ur.role_id
+                    INNER JOIN users u ON ur.user_id = u.id
+                    WHERE u.id = :userId
+                    """,
+            nativeQuery = true
     )
     List<Role> findAllByUserId(Long userId);
 

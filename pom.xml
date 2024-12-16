@@ -29,6 +29,7 @@
     <properties>
         <java.version>21</java.version>
         <google.api.version>2.4.0</google.api.version>
+        <stripe.version>28.1.0</stripe.version>
     </properties>
     <dependencies>
         <dependency>
@@ -123,6 +124,16 @@
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-jackson2</artifactId>
             <version>1.15.0-rc</version>
+        </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>${stripe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>3.9.0</version>
         </dependency>
     </dependencies>
     <build>

@@ -3,11 +3,6 @@ package utc2.itk62.e_reader.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -16,7 +11,11 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "permissions", schema = "public", indexes = {
-        @Index(name = "permissions_http_method_path_idx", columnList = "http_method, path")
+        @Index(name = "permissions_http_method_path_idx", columnList = "http_method, path", unique = true)
+})
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
 })
 public class Permission extends BaseEntity {
     @NotNull
@@ -27,11 +26,4 @@ public class Permission extends BaseEntity {
     @Column(name = "path", nullable = false, length = Integer.MAX_VALUE)
     private String path;
 
-    @OneToMany(mappedBy = "permission")
-    private Set<RolePermission> rolePermissions = new LinkedHashSet<>();
-
-    public Permission(String httpMethod, String path) {
-        this.httpMethod = httpMethod;
-        this.path = path;
-    }
 }

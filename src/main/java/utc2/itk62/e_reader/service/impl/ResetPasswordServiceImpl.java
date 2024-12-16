@@ -1,6 +1,5 @@
 package utc2.itk62.e_reader.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import utc2.itk62.e_reader.constant.EmailVerificationStatus;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.constant.ResetPasswordStatus;
-import utc2.itk62.e_reader.domain.entity.EmailVerification;
 import utc2.itk62.e_reader.domain.entity.ResetPasswordRequest;
 import utc2.itk62.e_reader.domain.entity.User;
 import utc2.itk62.e_reader.exception.EReaderException;

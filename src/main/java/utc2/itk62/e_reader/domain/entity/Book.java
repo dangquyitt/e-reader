@@ -5,10 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +12,10 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "books", schema = "public")
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class Book extends BaseEntity {
     @NotNull
     @ColumnDefault("''")
@@ -29,7 +29,7 @@ public class Book extends BaseEntity {
 
     @NotNull
     @ColumnDefault("0")
-    @Column(name = "\"totalPage\"", nullable = false)
+    @Column(name = "total_page", nullable = false)
     private Integer totalPage;
 
     @Column(name = "rating")
@@ -45,26 +45,5 @@ public class Book extends BaseEntity {
     @NotNull
     @Column(name = "file_url", nullable = false, length = Integer.MAX_VALUE)
     private String fileUrl;
-
-    @OneToMany(mappedBy = "book")
-    private Set<BookAuthor> bookAuthors = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "book")
-    private Set<BookCollection> bookCollections = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "book")
-    private Set<BookTag> bookTags = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "book")
-    private Set<Comment> comments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "book")
-    private Set<Favorite> favorites = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "book")
-    private Set<Rating> ratings = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "book")
-    private Set<ReadingProgress> readingProgresses = new LinkedHashSet<>();
 
 }

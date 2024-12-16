@@ -16,6 +16,10 @@ import java.time.Instant;
 @Table(name = "email_verifications", schema = "public", indexes = {
         @Index(name = "email_verifications_email_idx", columnList = "email")
 })
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class EmailVerification extends BaseEntity {
     @NotNull
     @Column(name = "verification_code", nullable = false, length = Integer.MAX_VALUE)

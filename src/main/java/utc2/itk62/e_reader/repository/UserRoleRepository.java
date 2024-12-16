@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    boolean existsByUserAndRole(User user, Role role);
+    boolean existsByUserIdAndRoleId(Long userId, Long roleId);
 
-    List<UserRole> findByUser(User user);
+    List<UserRole> findByUserId(Long userId);
 }

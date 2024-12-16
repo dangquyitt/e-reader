@@ -3,7 +3,6 @@ package utc2.itk62.e_reader.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
@@ -14,16 +13,18 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "subscriptions", schema = "public")
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class Subscription extends BaseEntity {
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "price_id", nullable = false)
-    private Price price;
+    @Column(name = "price_id", nullable = false)
+    private Long priceId;
 
     @NotNull
     @Column(name = "start_time", nullable = false)

@@ -16,16 +16,18 @@ import java.time.Instant;
 @Table(name = "reading_progresses", schema = "public", indexes = {
         @Index(name = "reading_progresses_user_id_book_id_idx", columnList = "user_id, book_id", unique = true)
 })
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class ReadingProgress extends BaseEntity {
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
+    @Column(name = "book_id", nullable = false)
+    private Long bookId;
 
     @NotNull
     @ColumnDefault("0")

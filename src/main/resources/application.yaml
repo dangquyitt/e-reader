@@ -57,6 +57,8 @@ application:
   client:
     url:
       http://localhost:5173/#
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY}
 
 
 user-admin:

@@ -1,11 +1,10 @@
 package utc2.itk62.e_reader.domain.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.time.Instant;
 
 @Builder
 @AllArgsConstructor
@@ -17,12 +16,10 @@ import java.time.Instant;
         @Index(name = "book_tags_book_id_tag_id_idx", columnList = "book_id, tag_id", unique = true)
 })
 public class BookTag extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @Column(name = "book_id")
+    private Long bookId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
-    private Tag tag;
+    @Column(name = "tag_id")
+    private Long tagId;
 
 }

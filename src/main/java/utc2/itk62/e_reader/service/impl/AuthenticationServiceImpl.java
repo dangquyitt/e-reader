@@ -113,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.builder().email(email).password(passwordEncoder.encode(password)).build();
         userRepository.save(user);
         Role role = roleRepository.findByName(RoleName.USER).orElseThrow(() -> new EReaderException(MessageCode.INVALID_ROLE_NAME));
-        userRoleRepository.save(new UserRole(user, role));
+        userRoleRepository.save(new UserRole(user.getId(), role.getId()));
         Thread.startVirtualThread(() -> {
             emailVerificationService.sendEmailVerificationCode(user.getEmail());
         });

@@ -50,14 +50,14 @@ public class AdminSeeder implements CommandLineRunner {
 
         List<Role> roles = roleRepository.findAll();
 
-        List<UserRole> userRoles = userRoleRepository.findByUser(user);
+        List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
         Set<Long> existingRoleIds = userRoles.stream()
-                .map(userRole -> userRole.getRole().getId())
+                .map(UserRole::getRoleId)
                 .collect(Collectors.toSet());
 
         List<UserRole> newUserRoles = roles.stream()
                 .filter(role -> !existingRoleIds.contains(role.getId())) // Lọc các role chưa có
-                .map(role -> UserRole.builder().user(user).role(role).build()) // Tạo UserRole mới
+                .map(role -> UserRole.builder().userId(user.getId()).roleId(role.getId()).build()) // Tạo UserRole mới
                 .toList();
 
         if (!newUserRoles.isEmpty()) {

@@ -3,11 +3,6 @@ package utc2.itk62.e_reader.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -20,17 +15,17 @@ import java.util.Set;
 }, uniqueConstraints = {
         @UniqueConstraint(name = "collections_name_key", columnNames = {"name"})
 })
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class Collection extends BaseEntity {
     @NotNull
     @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
     private String name;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @OneToMany(mappedBy = "collection")
-    private Set<BookCollection> bookCollections = new LinkedHashSet<>();
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
 }
