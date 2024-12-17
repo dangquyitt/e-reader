@@ -1,15 +1,11 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.Comment;
-import utc2.itk62.e_reader.domain.entity.User;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.CommentRepository;
-import utc2.itk62.e_reader.repository.UserRepository;
-import utc2.itk62.e_reader.service.UserService;
+import utc2.itk62.e_reader.service.CommentService;
 
 import java.util.List;
 

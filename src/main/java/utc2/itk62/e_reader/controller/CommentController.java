@@ -6,22 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
-import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.entity.Comment;
-import utc2.itk62.e_reader.domain.model.BookFilter;
-import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
-import utc2.itk62.e_reader.domain.model.UpdateBookParam;
-import utc2.itk62.e_reader.dto.RequestFilter;
-import utc2.itk62.e_reader.dto.book.BookResponse;
-import utc2.itk62.e_reader.dto.book.CreateBookRequest;
-import utc2.itk62.e_reader.dto.book.UpdateBookRequest;
 import utc2.itk62.e_reader.dto.comment.CreateCommentRequest;
 import utc2.itk62.e_reader.dto.comment.UpdateCommentRequest;
-import utc2.itk62.e_reader.service.BookService;
-import utc2.itk62.e_reader.service.impl.CommentService;
+import utc2.itk62.e_reader.service.CommentService;
 
-import java.util.List;
 import java.util.Locale;
 
 @RestController
