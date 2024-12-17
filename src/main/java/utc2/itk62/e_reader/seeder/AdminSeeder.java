@@ -3,6 +3,7 @@ package utc2.itk62.e_reader.seeder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import utc2.itk62.e_reader.domain.entity.Role;
@@ -12,10 +13,13 @@ import utc2.itk62.e_reader.repository.RoleRepository;
 import utc2.itk62.e_reader.repository.UserRepository;
 import utc2.itk62.e_reader.repository.UserRoleRepository;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@Order(2)
 public class AdminSeeder implements CommandLineRunner {
 
     @Value("${user-admin.email}")
@@ -38,29 +42,26 @@ public class AdminSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Optional<User> opUser = userRepository.findByEmail(adminEmail);
-        User user;
-        if (opUser.isPresent()) {
-            user = opUser.get();
-            user.setPassword(passwordEncoder.encode(adminPassword));
-        } else {
-            user = new User();
-            user.setEmail(adminEmail);
-            user.setPassword(passwordEncoder.encode(adminPassword));
-            userRepository.save(user);
-        }
+        User user = userRepository.findByEmail(adminEmail).orElse(
+                User.builder().email(adminEmail).password(passwordEncoder.encode(adminPassword)).build()
+        );
+        user.setEmailVerifiedAt(Instant.now());
+        userRepository.save(user);
+
         List<Role> roles = roleRepository.findAll();
-        List<UserRole> userRoles = new ArrayList<>();
-        for (Role role : roles) {
-            boolean exists = userRoleRepository.existsByUserAndRole(user, role);
-            if (exists) {
-                continue;
-            }
-            UserRole userRole = new UserRole();
-            userRole.setRole(role);
-            userRole.setUser(user);
-            userRoles.add(userRole);
+
+        List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+        Set<Long> existingRoleIds = userRoles.stream()
+                .map(UserRole::getRoleId)
+                .collect(Collectors.toSet());
+
+        List<UserRole> newUserRoles = roles.stream()
+                .filter(role -> !existingRoleIds.contains(role.getId())) // Lọc các role chưa có
+                .map(role -> UserRole.builder().userId(user.getId()).roleId(role.getId()).build()) // Tạo UserRole mới
+                .toList();
+
+        if (!newUserRoles.isEmpty()) {
+            userRoleRepository.saveAll(newUserRoles);
         }
-        userRoleRepository.saveAll(userRoles);
     }
 }

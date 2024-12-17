@@ -1,34 +1,25 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.RoleName;
-
-import java.util.Set;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false, unique = true)
-    private RoleName name;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRole> userRoles;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RolePermission> rolePermissions;
-
+@Table(name = "roles", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(name = "roles_name_key", columnNames = {"name"})
+})
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
+public class Role extends BaseEntity {
+    @NotNull
+    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
+    private String name;
 
 }

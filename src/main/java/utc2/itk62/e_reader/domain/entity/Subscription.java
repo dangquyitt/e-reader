@@ -1,32 +1,37 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.Instant;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "subscriptions")
+@Table(name = "subscriptions", schema = "public")
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class Subscription extends BaseEntity {
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
+    @NotNull
+    @Column(name = "price_id", nullable = false)
+    private Long priceId;
+
+    @NotNull
     @Column(name = "start_time", nullable = false)
     private Instant startTime;
 
+    @NotNull
     @Column(name = "end_time", nullable = false)
     private Instant endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "price_id", nullable = false)
-    private Price price;
 }

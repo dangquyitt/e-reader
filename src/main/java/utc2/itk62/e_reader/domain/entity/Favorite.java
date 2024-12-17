@@ -1,28 +1,28 @@
 package utc2.itk62.e_reader.domain.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "favorites")
-public class Favorite extends BaseEntity{
+@Table(name = "favorites", schema = "public", indexes = {
+        @Index(name = "favorites_user_id_book_id_idx", columnList = "user_id, book_id", unique = true)
+})
+public class Favorite extends BaseEntity {
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
+    @NotNull
+    @Column(name = "book_id", nullable = false)
+    private Long bookId;
 
 }

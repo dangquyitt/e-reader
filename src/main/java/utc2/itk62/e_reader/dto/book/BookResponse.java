@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.dto;
+package utc2.itk62.e_reader.dto.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,17 +14,17 @@ public class BookResponse {
 
     private Long id;
     private String title;
-    private String desc;
+    private String description;
     private int totalPage;
-    private float rating;
-    private int publishedYear;
+    private Double rating;
+    private Integer publishedYear;
     private String coverImageUrl;
     private String fileUrl;
 
     public BookResponse(Book book) {
         this.id = book.getId();
         this.title = book.getTitle();
-        this.desc = book.getDescription();
+        this.description = book.getDescription();
         this.totalPage = book.getTotalPage();
         this.rating = book.getRating();
         this.publishedYear = book.getPublishedYear();

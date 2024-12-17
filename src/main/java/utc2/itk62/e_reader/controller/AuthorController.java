@@ -57,6 +57,12 @@ public class AuthorController {
                 .build();
         return HTTPResponse.success(roleResponse);
     }
+<<<<<<< HEAD
+=======
+
+    @GetMapping
+    public ResponseEntity<HTTPResponse> getAllRole() {
+>>>>>>> fd632d061c27521073c7c0aa5864b316813311ea
 
     @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getAllRole(@RequestBody RequestFilter<AuthorFilter> filter) {

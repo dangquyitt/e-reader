@@ -64,11 +64,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> getAllAuthor(AuthorFilter authorFilter, Pagination pagination) {
-        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
-        Page<Author> authors = authorRepository.findAll(pageable);
-        pagination.setTotal(authors.getTotalPages());
-        return authors.toList();
+    public List<Author> getAllAuthor() {
+        return authorRepository.findAll();
     }
 
     @Override

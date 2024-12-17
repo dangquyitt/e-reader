@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.dto;
+package utc2.itk62.e_reader.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

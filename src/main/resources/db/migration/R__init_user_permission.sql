@@ -5,7 +5,8 @@ VALUES ('USER')
 WITH permission_ids AS (
 INSERT INTO permissions (http_method, path)
 VALUES
-    ('GET', '/api/books/filter$')
+    ('POST', '/api/books/filter$'),
+    ('POST', '/api/users/changePassword$')
 
 ON CONFLICT (http_method, path)
     DO NOTHING

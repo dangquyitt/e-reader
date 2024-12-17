@@ -9,10 +9,10 @@ import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
-import utc2.itk62.e_reader.dto.BookResponse;
-import utc2.itk62.e_reader.dto.CreateBookRequest;
+import utc2.itk62.e_reader.dto.book.BookResponse;
+import utc2.itk62.e_reader.dto.book.CreateBookRequest;
 import utc2.itk62.e_reader.dto.RequestFilter;
-import utc2.itk62.e_reader.dto.UpdateBookRequest;
+import utc2.itk62.e_reader.dto.book.UpdateBookRequest;
 import utc2.itk62.e_reader.service.BookService;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.dto;
+package utc2.itk62.e_reader.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

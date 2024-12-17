@@ -1,33 +1,40 @@
 package utc2.itk62.e_reader.domain.entity;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.EmailVerificationStatus;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "email_verifications")
+@Table(name = "email_verifications", schema = "public", indexes = {
+        @Index(name = "email_verifications_email_idx", columnList = "email")
+})
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class EmailVerification extends BaseEntity {
+    @NotNull
+    @Column(name = "verification_code", nullable = false, length = Integer.MAX_VALUE)
+    private String verificationCode;
 
-    @Column(name = "verification_code", nullable = false)
-    private String VerificationCode;
-
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
     private String email;
 
+    @Column(name = "expired_at")
     private Instant expiredAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EmailVerificationStatus status;
+    @NotNull
+    @ColumnDefault("'PENDING'")
+    @Column(name = "status", nullable = false, length = Integer.MAX_VALUE)
+    private String status;
 
 }

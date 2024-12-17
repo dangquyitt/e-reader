@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.model.RoleFilter;
@@ -14,7 +13,6 @@ import utc2.itk62.e_reader.dto.RoleResponse;
 import utc2.itk62.e_reader.dto.UpdateRoleRequest;
 import utc2.itk62.e_reader.service.RoleService;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;

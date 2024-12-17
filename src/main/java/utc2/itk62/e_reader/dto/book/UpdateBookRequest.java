@@ -1,4 +1,4 @@
-package utc2.itk62.e_reader.dto;
+package utc2.itk62.e_reader.dto.book;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +11,6 @@ public class UpdateBookRequest {
     private String title;
     private String desc;
     private int totalPage;
-    private float rating;
+    private Double rating;
     private int publishedYear;
 }

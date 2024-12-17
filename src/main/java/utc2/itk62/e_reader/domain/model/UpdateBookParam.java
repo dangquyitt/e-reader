@@ -12,7 +12,7 @@ public class UpdateBookParam {
     private String title;
     private String desc;
     private int totalPage;
-    private float rating;
+    private Double rating;
     private int publishedYear;
     private Long id;
 }

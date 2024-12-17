@@ -1,25 +1,24 @@
 package utc2.itk62.e_reader.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Set;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "authors")
+@Table(name = "authors", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(name = "authors_name_key", columnNames = {"name"})
+})
 public class Author extends BaseEntity {
-
-    @Column(nullable = false, unique = true)
+    @NotNull
+    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
     private String name;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookAuthor> bookAuthors;
 
 }

@@ -1,35 +1,26 @@
 package utc2.itk62.e_reader.domain.entity;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import utc2.itk62.e_reader.domain.enums.DurationUnit;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.util.Set;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "plans")
+@Table(name = "plans", schema = "public")
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class Plan extends BaseEntity {
-
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
     private String name;
 
-    @Column(nullable = false)
-    private int duration;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private DurationUnit durationUnit;
-
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Price> prices;
-
-
 }
+

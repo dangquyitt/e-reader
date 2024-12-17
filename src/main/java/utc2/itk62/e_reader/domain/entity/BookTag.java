@@ -1,26 +1,25 @@
 package utc2.itk62.e_reader.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "book_tags")
+@Table(name = "book_tags", schema = "public", indexes = {
+        @Index(name = "book_tags_book_id_tag_id_idx", columnList = "book_id, tag_id", unique = true)
+})
 public class BookTag extends BaseEntity {
+    @Column(name = "book_id")
+    private Long bookId;
 
-    @ManyToOne
-    @JoinColumn(name = "tag_id", nullable = false)
-    private Tag tag;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
-
+    @Column(name = "tag_id")
+    private Long tagId;
 
 }

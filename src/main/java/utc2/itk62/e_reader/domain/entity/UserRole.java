@@ -1,26 +1,28 @@
 package utc2.itk62.e_reader.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "user_roles")
+@Table(name = "user_roles", schema = "public", indexes = {
+        @Index(name = "user_roles_user_id_role_id_idx", columnList = "user_id, role_id", unique = true)
+})
+@AttributeOverrides({
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 public class UserRole extends BaseEntity {
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
+    @NotNull
+    @Column(name = "role_id", nullable = false)
+    private Long roleId;
 
 }
