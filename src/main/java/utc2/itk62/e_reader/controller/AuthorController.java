@@ -6,10 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Author;
-import utc2.itk62.e_reader.dto.AuthorResponse;
-import utc2.itk62.e_reader.dto.CreateAuthorRequest;
-import utc2.itk62.e_reader.dto.RoleResponse;
-import utc2.itk62.e_reader.dto.UpdateAuthorRequest;
+import utc2.itk62.e_reader.domain.model.AuthorFilter;
+import utc2.itk62.e_reader.dto.*;
 import utc2.itk62.e_reader.service.AuthorService;
 
 import java.util.List;
@@ -26,7 +24,6 @@ public class AuthorController {
     private final AuthorService authorService;
 
 
-
     @PostMapping
     public ResponseEntity<HTTPResponse> create(@RequestBody CreateAuthorRequest request, Locale locale) {
         Author author = authorService.createAuthor(request.getAuthorName());
@@ -36,7 +33,7 @@ public class AuthorController {
                 .build();
 
         String message = messageSource.getMessage("author.created", null, locale);
-        return HTTPResponse.success(message,authorResponse);
+        return HTTPResponse.success(message, authorResponse);
     }
 
     @PutMapping("/{id}")
@@ -60,23 +57,24 @@ public class AuthorController {
                 .build();
         return HTTPResponse.success(roleResponse);
     }
-    @GetMapping
-    public ResponseEntity<HTTPResponse> getAllRole() {
 
-        List<AuthorResponse> authorResponses = authorService.getAllAuthor()
+    @PostMapping("/filter")
+    public ResponseEntity<HTTPResponse> getAllRole(@RequestBody RequestFilter<AuthorFilter> filter) {
+
+        List<AuthorResponse> authorResponses = authorService.getAllAuthor(filter.getFilter(), filter.getPagination())
                 .stream().map(author -> AuthorResponse.builder()
                         .id(author.getId())
                         .authorName(author.getName())
                         .build()).collect(Collectors.toList());
 
-        return HTTPResponse.success(authorResponses);
+        return HTTPResponse.success("Author retrieved successfully", authorResponses, filter.getPagination());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HTTPResponse> deleteRole(@PathVariable long id) {
 
         String message = "";
-        if(authorService.deleteAuthor(id)){
+        if (authorService.deleteAuthor(id)) {
             message = "Delete author successfully";
         }
 
@@ -84,7 +82,7 @@ public class AuthorController {
     }
 
     @GetMapping("/books/{id}")
-    public ResponseEntity<HTTPResponse> getAuthorByBookId(@PathVariable long id){
+    public ResponseEntity<HTTPResponse> getAuthorByBookId(@PathVariable long id) {
         Author author = authorService.getAuthorByBookId(id);
         AuthorResponse authorResponse = AuthorResponse.builder()
                 .id(author.getId())

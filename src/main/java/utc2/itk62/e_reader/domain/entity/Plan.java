@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import utc2.itk62.e_reader.domain.enums.DurationUnit;
 
+import java.util.Set;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +27,9 @@ public class Plan extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DurationUnit durationUnit;
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Price> prices;
 
 
 }

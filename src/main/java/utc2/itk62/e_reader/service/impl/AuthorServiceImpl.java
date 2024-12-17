@@ -2,10 +2,16 @@ package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
+import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.Author;
+import utc2.itk62.e_reader.domain.entity.Book;
+import utc2.itk62.e_reader.domain.model.AuthorFilter;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.AuthorRepository;
 import utc2.itk62.e_reader.repository.BookRepository;
@@ -58,8 +64,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> getAllAuthor() {
-        return authorRepository.findAll();
+    public List<Author> getAllAuthor(AuthorFilter authorFilter, Pagination pagination) {
+        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
+        Page<Author> authors = authorRepository.findAll(pageable);
+        pagination.setTotal(authors.getTotalPages());
+        return authors.toList();
     }
 
     @Override
