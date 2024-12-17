@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.Book;
+import utc2.itk62.e_reader.domain.entity.Comment;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
+import utc2.itk62.e_reader.dto.book.BookDetail;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.BookRepository;
+import utc2.itk62.e_reader.repository.CommentRepository;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
 
@@ -27,6 +30,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final FileService fileService;
+    private final CommentRepository commentRepository;
 
     @Override
     public Book createBook(CreateBookParam createBookParam) {
@@ -88,5 +92,22 @@ public class BookServiceImpl implements BookService {
         Page<Book> pageBooks = bookRepository.findAll(pageable);
         pagination.setTotal(pageBooks.getTotalPages());
         return pageBooks.toList();
+    }
+
+    @Override
+    public BookDetail getBookDetail(long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new EReaderException("adsf"));
+        List<Comment> comments = commentRepository.findAllByBookId(bookId);
+        return BookDetail.builder()
+                .comments(comments)
+                .coverImageUrl(book.getCoverImageUrl())
+                .id(bookId)
+                .description(book.getDescription())
+                .fileUrl(book.getFileUrl())
+                .publishedYear(book.getPublishedYear())
+                .rating(book.getRating())
+                .title(book.getTitle())
+                .totalPage(book.getTotalPage())
+                .build();
     }
 }

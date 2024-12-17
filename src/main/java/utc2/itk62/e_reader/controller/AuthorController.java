@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Author;
-import utc2.itk62.e_reader.domain.model.AuthorFilter;
-import utc2.itk62.e_reader.dto.*;
+import utc2.itk62.e_reader.dto.AuthorResponse;
+import utc2.itk62.e_reader.dto.CreateAuthorRequest;
+import utc2.itk62.e_reader.dto.RoleResponse;
+import utc2.itk62.e_reader.dto.UpdateAuthorRequest;
 import utc2.itk62.e_reader.service.AuthorService;
 
 import java.util.List;
@@ -49,7 +51,7 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HTTPResponse> getRole(@PathVariable long id) {
+    public ResponseEntity<HTTPResponse> getAuthor(@PathVariable long id) {
         Author author = authorService.getAuthor(id);
         RoleResponse roleResponse = RoleResponse.builder()
                 .id(author.getId())
@@ -57,27 +59,21 @@ public class AuthorController {
                 .build();
         return HTTPResponse.success(roleResponse);
     }
-<<<<<<< HEAD
-=======
+
 
     @GetMapping
-    public ResponseEntity<HTTPResponse> getAllRole() {
->>>>>>> fd632d061c27521073c7c0aa5864b316813311ea
-
-    @PostMapping("/filter")
-    public ResponseEntity<HTTPResponse> getAllRole(@RequestBody RequestFilter<AuthorFilter> filter) {
-
-        List<AuthorResponse> authorResponses = authorService.getAllAuthor(filter.getFilter(), filter.getPagination())
+    public ResponseEntity<HTTPResponse> getAllAuthor() {
+        List<AuthorResponse> authorResponses = authorService.getAllAuthor()
                 .stream().map(author -> AuthorResponse.builder()
                         .id(author.getId())
                         .authorName(author.getName())
                         .build()).collect(Collectors.toList());
 
-        return HTTPResponse.success("Author retrieved successfully", authorResponses, filter.getPagination());
+        return HTTPResponse.success(authorResponses);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HTTPResponse> deleteRole(@PathVariable long id) {
+    public ResponseEntity<HTTPResponse> deleteAuthor(@PathVariable long id) {
 
         String message = "";
         if (authorService.deleteAuthor(id)) {

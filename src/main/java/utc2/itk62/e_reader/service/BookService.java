@@ -5,6 +5,7 @@ import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
+import utc2.itk62.e_reader.dto.book.BookDetail;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface BookService {
     Book getBook(Long id);
 
     List<Book> getAllBook(BookFilter bookFilter, Pagination pagination);
+
+    BookDetail getBookDetail(long bookId);
 }
