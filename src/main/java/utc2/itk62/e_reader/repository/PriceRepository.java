@@ -22,5 +22,16 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
                     """,
             nativeQuery = true
     )
-    List<Price> findAllLatestPriceAndPlanIdIn(List<Long> planIds);
+    List<Price> findAllLatestByPlanIdIn(List<Long> planIds);
+
+    @Query(
+            value = """
+                    SELECT * FROM prices
+                    WHERE plan_id = :planId
+                    ORDER BY plan_id, effective_date
+                    LIMIT 1
+                    """,
+            nativeQuery = true
+    )
+    Optional<Price> findLatestByPlanId(Long planId);
 }
