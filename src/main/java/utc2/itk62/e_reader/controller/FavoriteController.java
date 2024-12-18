@@ -35,7 +35,7 @@ public class FavoriteController {
         String message = messageSource.getMessage("favorite.create.success", null, locale);
         return HTTPResponse.success(message, favorite);
     }
-
+    
 
     @GetMapping()
     public ResponseEntity<HTTPResponse> getFavoriteByUser(Authentication authentication) {
