@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Data
 public class CreatePriceRequest {
+    private Long planId;
     private Map<String, Object> metadata;
     private List<String> features;
     private BigDecimal amount;
@@ -20,5 +21,4 @@ public class CreatePriceRequest {
     private Integer duration;
     @NotNull
     private String durationUnit;
-    private Long planId;
 }

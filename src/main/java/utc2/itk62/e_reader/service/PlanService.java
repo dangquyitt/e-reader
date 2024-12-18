@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PlanService {
     List<PlanInfo> getAllPlans();
+
+    Long createPlan(String name);
 }
