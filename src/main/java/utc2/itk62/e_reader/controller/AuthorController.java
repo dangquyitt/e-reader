@@ -51,7 +51,7 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HTTPResponse> getRole(@PathVariable long id) {
+    public ResponseEntity<HTTPResponse> getAuthor(@PathVariable long id) {
         Author author = authorService.getAuthor(id);
         RoleResponse roleResponse = RoleResponse.builder()
                 .id(author.getId())
@@ -60,9 +60,9 @@ public class AuthorController {
         return HTTPResponse.success(roleResponse);
     }
 
-    @GetMapping
-    public ResponseEntity<HTTPResponse> getAllRole() {
 
+    @GetMapping
+    public ResponseEntity<HTTPResponse> getAllAuthor() {
         List<AuthorResponse> authorResponses = authorService.getAllAuthor()
                 .stream().map(author -> AuthorResponse.builder()
                         .id(author.getId())
@@ -73,7 +73,7 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HTTPResponse> deleteRole(@PathVariable long id) {
+    public ResponseEntity<HTTPResponse> deleteAuthor(@PathVariable long id) {
 
         String message = "";
         if (authorService.deleteAuthor(id)) {

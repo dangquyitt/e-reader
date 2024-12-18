@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,3 +23,4 @@ public class Plan extends BaseEntity {
     private String name;
 
 }
+

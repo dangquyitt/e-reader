@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.constant.MessageCode;
-import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.service.TokenService;

@@ -9,6 +9,7 @@ import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
+import utc2.itk62.e_reader.dto.book.BookDetail;
 import utc2.itk62.e_reader.dto.book.BookResponse;
 import utc2.itk62.e_reader.dto.book.CreateBookRequest;
 import utc2.itk62.e_reader.dto.RequestFilter;
@@ -88,5 +89,10 @@ public class BookController {
         }
 
         return HTTPResponse.success(message);
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<HTTPResponse> getComment(@PathVariable Long id) {
+        return HTTPResponse.success(bookService.getBookDetail(id));
     }
 }
