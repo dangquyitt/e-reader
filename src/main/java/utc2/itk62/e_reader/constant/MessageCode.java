@@ -22,6 +22,8 @@ public class MessageCode {
     public static final String EMAIL_VERIFICATION_CODE_INVALID = "email_verification.code.invalid";
     public static final String EMAIL_VERIFICATION_SUCCESS = "email_verification.success";
 
+    public static final String PLAN_NAME_EXISTS = "plan.name.exists";
+
     public static final String RESET_PASSWORD_REQUEST_SUCCESS = "reset_password.request.success";
     public static final String RESET_PASSWORD_EXPIRED = "reset_password.expired";
     public static final String RESET_PASSWORD_SUCCESS = "reset_password.success";
