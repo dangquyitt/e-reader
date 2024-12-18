@@ -68,9 +68,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HTTPResponse> getBook(@PathVariable Long id) {
-        Book book = bookService.getBook(id);
-        BookResponse bookResponse = new BookResponse(book);
-        return HTTPResponse.success(bookResponse);
+        return HTTPResponse.success(bookService.getBookDetail(id));
     }
 
     @PostMapping("/filter")

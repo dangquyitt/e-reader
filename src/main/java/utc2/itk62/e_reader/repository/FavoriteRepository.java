@@ -1,6 +1,7 @@
 package utc2.itk62.e_reader.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import utc2.itk62.e_reader.domain.entity.Book;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FavotireRepository extends JpaRepository<Favorite, Long> {
+public interface FavoriteRepository extends JpaRepository<Favorite, Long>, JpaSpecificationExecutor<Favorite> {
     Optional<Favorite> findByUserIdAndBookId(Long userId, Long bookId);
 
     @Query("SELECT b FROM Book b " +

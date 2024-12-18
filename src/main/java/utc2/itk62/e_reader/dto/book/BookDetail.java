@@ -17,6 +17,6 @@ public class BookDetail {
     private Integer publishedYear;
     private String coverImageUrl;
     private String fileUrl;
-    List<Comment> comments;
-
+    private List<Comment> comments;
+    private boolean isFavorite;
 }
