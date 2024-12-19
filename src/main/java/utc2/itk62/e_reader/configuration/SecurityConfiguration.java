@@ -17,7 +17,7 @@ import utc2.itk62.e_reader.filter.AuthorizationFilter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfiguration {
-    private static final String[] PUBLIC_ENDPOINTS = {"/api/auth/**", "api/emailVerifications/**"};
+    private static final String[] PUBLIC_ENDPOINTS = {"/api/auth/**", "/api/emailVerifications/**", "/api/payments/webhook"};
     private final AuthenticationFilter authenticationFilter;
     private final AuthorizationFilter authorizationFilter;
 
