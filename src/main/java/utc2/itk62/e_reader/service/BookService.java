@@ -21,5 +21,5 @@ public interface BookService {
 
     List<Book> getAllBook(BookFilter bookFilter, Pagination pagination);
 
-    BookDetail getBookDetail(long bookId);
+    BookDetail getBookDetail(long bookId, long userId);
 }

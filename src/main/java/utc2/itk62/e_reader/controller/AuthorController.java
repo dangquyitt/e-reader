@@ -6,10 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Author;
-import utc2.itk62.e_reader.dto.AuthorResponse;
-import utc2.itk62.e_reader.dto.CreateAuthorRequest;
-import utc2.itk62.e_reader.dto.RoleResponse;
-import utc2.itk62.e_reader.dto.UpdateAuthorRequest;
+import utc2.itk62.e_reader.domain.model.AuthorFilter;
+import utc2.itk62.e_reader.dto.*;
 import utc2.itk62.e_reader.service.AuthorService;
 
 import java.util.List;
@@ -61,9 +59,9 @@ public class AuthorController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<HTTPResponse> getAllAuthor() {
-        List<AuthorResponse> authorResponses = authorService.getAllAuthor()
+    @GetMapping("/filter")
+    public ResponseEntity<HTTPResponse> getAllAuthor(@RequestBody RequestFilter<AuthorFilter> filter) {
+        List<AuthorResponse> authorResponses = authorService.getAllAuthor(filter.getFilter(), filter.getPagination())
                 .stream().map(author -> AuthorResponse.builder()
                         .id(author.getId())
                         .authorName(author.getName())

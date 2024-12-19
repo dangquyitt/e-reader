@@ -45,7 +45,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 spec = spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("userId"), filter.getUserId())));
             }
         }
-        
+
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Favorite> pageFavorites = favoriteRepository.findAll(spec, pageable);
         pagination.setTotal(pageFavorites.getTotalPages());
@@ -54,6 +54,8 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void deleteByUserIdAndBookId(Long userId, Long bookId) {
-
+        Optional<Favorite> favorite = favoriteRepository.findByUserIdAndBookId(userId, bookId);
+        favorite.ifPresent(favoriteRepository::delete);
+        
     }
 }
