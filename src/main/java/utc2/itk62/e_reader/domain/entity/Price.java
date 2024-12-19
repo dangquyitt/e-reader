@@ -9,8 +9,10 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -59,4 +61,8 @@ public class Price extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Object> metadata;
 
+    @NotNull
+    @ColumnDefault("now()")
+    @Column(name = "effective_date", nullable = false)
+    private Instant effectiveDate;
 }

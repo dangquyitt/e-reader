@@ -11,6 +11,10 @@ spring:
     username: postgres
     password: postgres
 
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  
   messages:
     basename: i18n/messages
     encoding: UTF-8

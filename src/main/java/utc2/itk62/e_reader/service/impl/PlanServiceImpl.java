@@ -2,13 +2,20 @@ package utc2.itk62.e_reader.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.domain.entity.Plan;
+import utc2.itk62.e_reader.domain.entity.Price;
 import utc2.itk62.e_reader.domain.model.PlanInfo;
+import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.PlanRepository;
 import utc2.itk62.e_reader.repository.PriceRepository;
 import utc2.itk62.e_reader.service.PlanService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +26,30 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public List<PlanInfo> getAllPlans() {
         List<Plan> plans = planRepository.findAll();
-        return null;
+        List<Long> planIds = plans.stream().map(Plan::getId).toList();
+        List<Price> prices = priceRepository.findAllLatestPriceAndPlanIdIn(planIds);
+        Map<Long, Price> priceMap = prices.stream()
+                .collect(Collectors.toMap(
+                        Price::getPlanId,
+                        price -> price
+                ));
+        return plans.stream().map(p -> {
+            PlanInfo planInfo = new PlanInfo();
+            planInfo.setId(p.getId());
+            planInfo.setName(p.getName());
+            planInfo.setPrice(priceMap.get(p.getId()));
+            return planInfo;
+        }).toList();
+    }
+
+    @Override
+    public Long createPlan(String name) {
+        planRepository.findByName(name).ifPresent(p -> {
+            throw new EReaderException(MessageCode.PLAN_NAME_EXISTS);
+        });
+        Plan plan = new Plan();
+        plan.setName(name);
+        planRepository.save(plan);
+        return plan.getId();
     }
 }

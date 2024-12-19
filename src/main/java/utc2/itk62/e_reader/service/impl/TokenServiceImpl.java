@@ -43,7 +43,7 @@ public class TokenServiceImpl implements TokenService {
                 .expiration(Date.from(payload.getExpiredAt()))
                 .id(payload.getId())
                 .claim("userId", payload.getUserId())
-                .claim("roles", payload.getRoles().stream().map(Role::getName).toList())
+//                .claim("roles", payload.getRoles().stream().map(Role::getName).toList())
                 .signWith(secretKey()).compact();
     }
 

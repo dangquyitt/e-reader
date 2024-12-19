@@ -16,12 +16,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(Long userId, Long bookId, String content) {
-        return Comment.builder().content(content).bookId(bookId).userId(userId).build();
+        return commentRepository.save(Comment.builder().content(content).bookId(bookId).userId(userId).build());
     }
 
     @Override
-    public boolean deleteComment(Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() ->
+    public boolean deleteComment(Long id, Long userId) {
+        Comment comment = commentRepository.findByIdAndUserId(id, userId).orElseThrow(() ->
                 new EReaderException("not found comment Id"));
         commentRepository.delete(comment);
         return !commentRepository.existsById(id);
