@@ -8,7 +8,7 @@ public interface CommentService {
 
     Comment createComment(Long userId, Long bookId, String content);
 
-    boolean deleteComment(Long id);
+    boolean deleteComment(Long id, Long userId);
 
     Comment updateComment(Long userId, Long commentId, String content);
 

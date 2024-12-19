@@ -45,10 +45,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HTTPResponse> deleteComment(@PathVariable Long id) {
-
+    public ResponseEntity<HTTPResponse> deleteComment(@PathVariable Long id, Authentication authentication) {
+        TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
         String message = "";
-        if (commentService.deleteComment(id)) {
+        if (commentService.deleteComment(id, tokenPayload.getUserId())) {
             message = "Delete book successfully";
         }
 

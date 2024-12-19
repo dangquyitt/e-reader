@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.Author;
 import utc2.itk62.e_reader.domain.entity.Book;
+import utc2.itk62.e_reader.domain.entity.Favorite;
 import utc2.itk62.e_reader.domain.model.AuthorFilter;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.AuthorRepository;
@@ -64,8 +66,20 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> getAllAuthor() {
-        return authorRepository.findAll();
+    public List<Author> getAllAuthor(AuthorFilter authorFilter, Pagination pagination) {
+        Specification<Author> spec = Specification.where(null);
+
+        if (authorFilter != null) {
+            if (authorFilter.getName() != null) {
+                String namePattern = "%" + authorFilter.getName() + "%";
+                spec = spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"), namePattern)));
+            }
+        }
+
+        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
+        Page<Author> authorPage = authorRepository.findAll(spec, pageable);
+        pagination.setTotal(authorPage.getTotalPages());
+        return authorPage.toList();
     }
 
     @Override

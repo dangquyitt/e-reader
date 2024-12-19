@@ -136,6 +136,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Thread.startVirtualThread(() -> {
             emailVerificationService.sendEmailVerificationCode(user.getEmail());
         });
+        
     }
 
     @Override
