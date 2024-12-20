@@ -3,9 +3,11 @@ package utc2.itk62.e_reader.service.impl;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +17,7 @@ import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.*;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.OrderBy;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
 
 import utc2.itk62.e_reader.dto.book.BookDetail;
@@ -91,7 +94,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBook(BookFilter filter, Pagination pagination) {
+    public List<Book> getAllBook(BookFilter filter, OrderBy orderBy, Pagination pagination) {
         Specification<Book> spec = Specification.where(null);
         if (!CollectionUtils.isEmpty(filter.getIds())) {
             spec = spec.and(((root, query, cb) -> root.get("id").in(filter.getIds())));
@@ -101,7 +104,13 @@ public class BookServiceImpl implements BookService {
             spec = spec.and(((root, query, cb) -> cb.like(root.get("title"), titlePattern)));
         }
 
-        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
+        Sort sort = null;
+        if (orderBy != null) {
+            Sort.Direction direction = orderBy.getOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            sort = Sort.by(direction, orderBy.getField());
+        }
+
+        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize(), sort);
         Page<Book> pageBooks = bookRepository.findAll(spec, pageable);
         pagination.setTotal(pageBooks.getTotalPages());
         return pageBooks.toList();
@@ -111,7 +120,7 @@ public class BookServiceImpl implements BookService {
     public BookDetail getBookDetail(long bookId, long userId) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new EReaderException("adsf"));
         List<Comment> comments = commentRepository.findAllByBookId(bookId);
-        List<Collection> collections = collectionRepository.findAllByUserId(userId);
+        List<Collection> collections = collectionRepository.findAllByUserIdAndBookId(userId, bookId);
         BookDetail bookDetail = BookDetail.builder()
                 .comments(comments)
                 .coverImageUrl(book.getCoverImageUrl())

@@ -76,7 +76,7 @@ public class BookController {
     @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getAllBook(@RequestBody RequestFilter<BookFilter> filter) {
         List<BookResponse> resp = bookService.
-                getAllBook(filter.getFilter(), filter.getPagination()).stream().map(BookResponse::new).toList();
+                getAllBook(filter.getFilter(), filter.getOrderBy(), filter.getPagination()).stream().map(BookResponse::new).toList();
         return HTTPResponse.success("Books retrieved successfully", resp, filter.getPagination());
     }
 

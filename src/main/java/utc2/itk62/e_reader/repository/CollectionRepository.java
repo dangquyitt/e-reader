@@ -19,4 +19,14 @@ public interface CollectionRepository extends JpaRepository<Collection, Long>, J
 
     List<Collection> findAllByUserId(Long userId);
 
+    @Query(
+            value = """
+                        SELECT c.* FROM collections c
+                        INNER JOIN book_collections bc ON bc.collection_id = c.id
+                        WHERE c.user_id = :userId AND bc.book_id = :bookId
+                    """,
+            nativeQuery = true
+    )
+    List<Collection> findAllByUserIdAndBookId(Long userId, Long bookId);
+
 }

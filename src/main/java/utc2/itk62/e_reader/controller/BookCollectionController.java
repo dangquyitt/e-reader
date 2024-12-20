@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/api/bookcollections")
+@RequestMapping("/api/bookCollections")
 
 @AllArgsConstructor
 public class BookCollectionController {
