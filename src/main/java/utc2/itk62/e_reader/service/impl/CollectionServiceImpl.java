@@ -41,11 +41,12 @@ public class CollectionServiceImpl implements CollectionService {
 
         if (collectionFilter != null) {
             if (collectionFilter.getUserId() != null) {
-                spec = spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("userId"), collectionFilter.getUserId())));
+                spec = spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.
+                        equal(root.get("userId"), collectionFilter.getUserId())));
             }
             if (collectionFilter.getName() != null) {
                 String namePattern = "%" + collectionFilter.getName() + "%";
-                spec = spec.and(((root, query, cb) -> cb.like(root.get("title"), namePattern)));
+                spec = spec.and(((root, query, cb) -> cb.like(root.get("name"), namePattern)));
             }
         }
 
