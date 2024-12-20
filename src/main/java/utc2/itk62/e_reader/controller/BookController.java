@@ -3,16 +3,17 @@ package utc2.itk62.e_reader.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
+import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
-import utc2.itk62.e_reader.dto.book.BookDetail;
+import utc2.itk62.e_reader.dto.RequestFilter;
 import utc2.itk62.e_reader.dto.book.BookResponse;
 import utc2.itk62.e_reader.dto.book.CreateBookRequest;
-import utc2.itk62.e_reader.dto.RequestFilter;
 import utc2.itk62.e_reader.dto.book.UpdateBookRequest;
 import utc2.itk62.e_reader.service.BookService;
 
@@ -67,8 +68,9 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HTTPResponse> getBook(@PathVariable Long id) {
-        return HTTPResponse.success(bookService.getBookDetail(id));
+    public ResponseEntity<HTTPResponse> getBook(@PathVariable Long id, Authentication authentication) {
+        TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
+        return HTTPResponse.success(bookService.getBookDetail(id, tokenPayload.getUserId()));
     }
 
     @PostMapping("/filter")
@@ -90,7 +92,8 @@ public class BookController {
     }
 
     @GetMapping("/{id}/comments")
-    public ResponseEntity<HTTPResponse> getComment(@PathVariable Long id) {
-        return HTTPResponse.success(bookService.getBookDetail(id));
+    public ResponseEntity<HTTPResponse> getComment(@PathVariable Long id, Authentication authentication) {
+        TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
+        return HTTPResponse.success(bookService.getBookDetail(id, tokenPayload.getUserId()));
     }
 }

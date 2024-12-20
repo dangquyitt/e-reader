@@ -2,7 +2,6 @@ package utc2.itk62.e_reader.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.http.protocol.HTTP;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
