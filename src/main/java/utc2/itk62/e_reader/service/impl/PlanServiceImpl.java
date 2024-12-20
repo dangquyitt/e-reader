@@ -27,7 +27,7 @@ public class PlanServiceImpl implements PlanService {
     public List<PlanInfo> getAllPlans() {
         List<Plan> plans = planRepository.findAll();
         List<Long> planIds = plans.stream().map(Plan::getId).toList();
-        List<Price> prices = priceRepository.findAllLatestPriceAndPlanIdIn(planIds);
+        List<Price> prices = priceRepository.findAllLatestByPlanIdIn(planIds);
         Map<Long, Price> priceMap = prices.stream()
                 .collect(Collectors.toMap(
                         Price::getPlanId,

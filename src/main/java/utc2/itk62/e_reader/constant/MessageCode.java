@@ -23,6 +23,9 @@ public class MessageCode {
     public static final String EMAIL_VERIFICATION_SUCCESS = "email_verification.success";
 
     public static final String PLAN_NAME_EXISTS = "plan.name.exists";
+    public static final String PLAN_ID_NOT_FOUND = "plan.id.not_found";
+    public static final String PRICE_LATEST_NOT_FOUND = "price.latest.not_found";
+    public static final String PAYMENT_ERROR = "payment.error";
 
     public static final String RESET_PASSWORD_REQUEST_SUCCESS = "reset_password.request.success";
     public static final String RESET_PASSWORD_EXPIRED = "reset_password.expired";
