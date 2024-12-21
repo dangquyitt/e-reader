@@ -11,10 +11,7 @@ import utc2.itk62.e_reader.repository.PlanRepository;
 import utc2.itk62.e_reader.repository.PriceRepository;
 import utc2.itk62.e_reader.service.PlanService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,5 +48,18 @@ public class PlanServiceImpl implements PlanService {
         plan.setName(name);
         planRepository.save(plan);
         return plan.getId();
+    }
+
+    @Override
+    public Plan updatePlan(Long id, String name) {
+        Plan plan = planRepository.findById(id).orElseThrow(() -> new EReaderException("not found Plan id"));
+        plan.setName(name);
+        return plan;
+    }
+
+    @Override
+    public void deletePlan(Long id) {
+        Optional<Plan> plan = planRepository.findById(id);
+        plan.ifPresent(planRepository::delete);
     }
 }
