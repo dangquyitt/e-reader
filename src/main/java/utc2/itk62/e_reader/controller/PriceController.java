@@ -1,8 +1,6 @@
 package utc2.itk62.e_reader.controller;
 
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
-import org.apache.http.protocol.HTTP;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;

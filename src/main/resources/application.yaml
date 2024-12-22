@@ -5,6 +5,7 @@ spring:
     hibernate:
       ddl-auto: none
 
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/e-reader

@@ -8,4 +8,5 @@ import java.util.List;
 public class TagFilter {
     List<Long> ids;
     String name;
+    Long bookIdNe;
 }

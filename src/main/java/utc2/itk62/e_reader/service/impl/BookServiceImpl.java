@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
@@ -44,8 +45,7 @@ public class BookServiceImpl implements BookService {
 
         Book book = Book.builder()
                 .title(createBookParam.getTitle())
-                .description(createBookParam.getDesc())
-                .rating(createBookParam.getRating())
+                .description(createBookParam.getDescription())
                 .publishedYear(createBookParam.getPublishedYear())
                 .totalPage(createBookParam.getTotalPage())
                 .fileUrl(fileService.uploadFile(createBookParam.getFileBook()))
@@ -78,6 +78,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Book updateBook(UpdateBookParam updateBookParam) {
         Book book = bookRepository.findById(updateBookParam.getId()).orElseThrow(() -> {
             log.error("BookServiceImpl | id: {} not found", updateBookParam.getId());

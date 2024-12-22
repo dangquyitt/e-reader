@@ -12,9 +12,8 @@ public class CreateBookParam {
     private MultipartFile fileBook;
     private MultipartFile fileCoverImage;
     private String title;
-    private String desc;
+    private String description;
     private int totalPage;
-    private Double rating;
     private int publishedYear;
     private List<Long> tagIds;
 }
