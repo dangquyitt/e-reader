@@ -49,7 +49,7 @@ cloud:
       secret-key: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}
     region:
       static: ap-southeast-1
-    endpointUrl: https://s3.ap-southeast-1.amazonaws.com
+    endpointUrl: s3.ap-southeast-1.amazonaws.com
 
 google:
   client:

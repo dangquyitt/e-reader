@@ -36,7 +36,7 @@ public class FileServiceImpl implements FileService {
         String fileUrl = "";
         File fileObj = convertMultiartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+        fileUrl = "https://" + bucketName + "." + endpointUrl + "/" + fileName;
         try {
             s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
