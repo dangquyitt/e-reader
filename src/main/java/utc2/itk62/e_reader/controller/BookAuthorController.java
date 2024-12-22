@@ -13,7 +13,6 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/bookAuthors")
-
 @AllArgsConstructor
 public class BookAuthorController {
 

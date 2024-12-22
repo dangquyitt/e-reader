@@ -19,8 +19,8 @@ public interface TagRepository extends JpaRepository<Tag, Long>, JpaSpecificatio
                     SELECT t.*
                     FROM tags t
                     INNER JOIN book_tags bt ON t.id = bt.tag_id
-                    WHERE bt.book_id IN :bookId
-                         """,
+                    WHERE bt.book_id = :bookId
+                    """,
             nativeQuery = true
 
     )

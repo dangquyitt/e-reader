@@ -47,6 +47,13 @@ public class FavoriteController {
         return HTTPResponse.success(translator.translate(locale, "favorite.delete.success"));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HTTPResponse> deleteFavoriteById(@PathVariable("id") Long id, Locale locale, Authentication authentication) {
+        TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
+        favoriteService.deleteFavoriteById(tokenPayload.getUserId(), id);
+        return HTTPResponse.success(translator.translate(locale, "favorite.delete.success"));
+    }
+
 
     @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getAllFavorites(@RequestBody RequestFilter<FavoriteFilter> filter, Authentication authentication) {

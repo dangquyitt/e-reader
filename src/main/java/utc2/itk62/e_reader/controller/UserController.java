@@ -16,7 +16,6 @@ import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.dto.user.ChangePasswordRequest;
 import utc2.itk62.e_reader.service.UserService;
 
-import java.security.Principal;
 import java.util.Locale;
 
 @RestController

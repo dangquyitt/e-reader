@@ -1,5 +1,6 @@
 package utc2.itk62.e_reader.dto.book;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import utc2.itk62.e_reader.domain.entity.Collection;
@@ -20,6 +21,7 @@ public class BookDetail {
     private String coverImageUrl;
     private String fileUrl;
     private List<Comment> comments;
+    @JsonProperty("isFavorite")
     private boolean isFavorite;
     private List<Collection> collections;
     private List<Tag> tags;

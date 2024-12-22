@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class CollectionFilter {
     Long userId;
+    Long bookIdNe;
     String name;
 }

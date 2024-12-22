@@ -22,6 +22,7 @@ import utc2.itk62.e_reader.repository.*;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class BookServiceImpl implements BookService {
     private final CommentRepository commentRepository;
     private final CollectionRepository collectionRepository;
     private final TagRepository tagRepository;
+    private final BookTagRepository bookTagRepository;
 
     @Override
     public Book createBook(CreateBookParam createBookParam) {
@@ -49,8 +51,19 @@ public class BookServiceImpl implements BookService {
                 .fileUrl(fileService.uploadFile(createBookParam.getFileBook()))
                 .coverImageUrl(fileService.uploadFile(createBookParam.getFileCoverImage()))
                 .build();
+        bookRepository.save(book);
 
-        return bookRepository.save(book);
+        if (createBookParam.getTagIds() != null && !createBookParam.getTagIds().isEmpty()) {
+            List<BookTag> bookTags = createBookParam.getTagIds().stream().map(tagId -> {
+                BookTag bookTag = new BookTag();
+                bookTag.setBookId(book.getId());
+                bookTag.setTagId(tagId);
+                return bookTag;
+            }).toList();
+            bookTagRepository.saveAll(bookTags);
+        }
+
+        return book;
     }
 
     @Override
@@ -107,12 +120,12 @@ public class BookServiceImpl implements BookService {
         }
 
         Sort sort = null;
-        if (orderBy != null) {
-            Sort.Direction direction = orderBy.getOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-            sort = Sort.by(direction, orderBy.getField());
-        }
+//        if (orderBy != null) {
+//            Sort.Direction direction = orderBy.getOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+//            sort = Sort.by(direction, orderBy.getField());
+//        }
 
-        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize(), sort);
+        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Book> pageBooks = bookRepository.findAll(spec, pageable);
         pagination.setTotal(pageBooks.getTotalPages());
         return pageBooks.toList();

@@ -1,13 +1,13 @@
 package utc2.itk62.e_reader.component;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Translator {
     private final MessageSource messageSource;
 

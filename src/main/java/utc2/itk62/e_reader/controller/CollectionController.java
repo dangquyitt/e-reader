@@ -47,7 +47,6 @@ public class CollectionController {
         return HTTPResponse.success(translator.translate(locale, "collection.delete.success"));
     }
 
-
     @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getAllCollection(@RequestBody RequestFilter<CollectionFilter> filter, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();

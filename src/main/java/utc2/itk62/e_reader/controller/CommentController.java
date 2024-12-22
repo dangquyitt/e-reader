@@ -54,11 +54,10 @@ public class CommentController {
         if (commentService.deleteComment(id, tokenPayload.getUserId())) {
             message = "Delete book successfully";
         }
-
         return HTTPResponse.success(message);
     }
 
-    @GetMapping("filter")
+    @PostMapping("filter")
     public ResponseEntity<HTTPResponse> getCommentByUser(@RequestBody RequestFilter<CommentFilter> filter, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
         filter.getFilter().setUserId(tokenPayload.getUserId());

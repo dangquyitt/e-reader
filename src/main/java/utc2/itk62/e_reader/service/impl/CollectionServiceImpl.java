@@ -1,12 +1,17 @@
 package utc2.itk62.e_reader.service.impl;
 
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import lombok.AllArgsConstructor;
+import org.hibernate.mapping.Join;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.pagination.Pagination;
+import utc2.itk62.e_reader.domain.entity.BookCollection;
 import utc2.itk62.e_reader.domain.entity.Collection;
 import utc2.itk62.e_reader.domain.model.CollectionFilter;
 import utc2.itk62.e_reader.exception.EReaderException;
@@ -47,6 +52,15 @@ public class CollectionServiceImpl implements CollectionService {
             if (collectionFilter.getName() != null) {
                 String namePattern = "%" + collectionFilter.getName() + "%";
                 spec = spec.and(((root, query, cb) -> cb.like(root.get("name"), namePattern)));
+            }
+            if (collectionFilter.getBookIdNe() != null) {
+                spec = spec.and((root, query, cb) -> {
+                    Subquery<Long> subquery = query.subquery(Long.class);
+                    Root<BookCollection> bookCollectionRoot = subquery.from(BookCollection.class);
+                    subquery.select(bookCollectionRoot.get("collectionId"))
+                            .where(cb.notEqual(bookCollectionRoot.get("bookId"), collectionFilter.getBookIdNe()));
+                    return cb.in(root.get("id")).value(subquery);
+                });
             }
         }
 

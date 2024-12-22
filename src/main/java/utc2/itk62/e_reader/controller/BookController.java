@@ -37,6 +37,7 @@ public class BookController {
                 .totalPage(request.getTotalPage())
                 .rating(request.getRating())
                 .publishedYear(request.getPublishedYear())
+                .tagIds(request.getTagIds())
                 .build();
         Book book = bookService.createBook(createBookParam);
         BookResponse bookResponse = new BookResponse(book);
