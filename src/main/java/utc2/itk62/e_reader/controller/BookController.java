@@ -7,10 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Book;
-import utc2.itk62.e_reader.domain.model.BookFilter;
-import utc2.itk62.e_reader.domain.model.CreateBookParam;
-import utc2.itk62.e_reader.domain.model.TokenPayload;
-import utc2.itk62.e_reader.domain.model.UpdateBookParam;
+import utc2.itk62.e_reader.domain.model.*;
 import utc2.itk62.e_reader.dto.RequestFilter;
 import utc2.itk62.e_reader.dto.book.BookResponse;
 import utc2.itk62.e_reader.dto.book.CreateBookRequest;
@@ -95,5 +92,12 @@ public class BookController {
     public ResponseEntity<HTTPResponse> getComment(@PathVariable Long id, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
         return HTTPResponse.success(bookService.getBookDetail(id, tokenPayload.getUserId()));
+    }
+
+    @PostMapping("/collections")
+    public ResponseEntity<HTTPResponse> getBookByCollectionIds(@RequestBody RequestFilter<GetBookByCollectionFilter> filter) {
+        List<BookResponse> resp = bookService.
+                getBooksByCollectionIds(filter.getFilter().getCollectionIds(), filter.getPagination()).stream().map(BookResponse::new).toList();
+        return HTTPResponse.success("Books retrieved successfully", resp, filter.getPagination());
     }
 }

@@ -1,9 +1,7 @@
 package utc2.itk62.e_reader.service.impl;
 
 import lombok.AllArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.*;
@@ -19,13 +16,13 @@ import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.OrderBy;
 import utc2.itk62.e_reader.domain.model.UpdateBookParam;
-
 import utc2.itk62.e_reader.dto.book.BookDetail;
 import utc2.itk62.e_reader.exception.EReaderException;
 import utc2.itk62.e_reader.repository.*;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +35,7 @@ public class BookServiceImpl implements BookService {
     private final FileService fileService;
     private final CommentRepository commentRepository;
     private final CollectionRepository collectionRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public Book createBook(CreateBookParam createBookParam) {
@@ -72,10 +70,14 @@ public class BookServiceImpl implements BookService {
             log.error("BookServiceImpl | id: {} not found", updateBookParam.getId());
             return new EReaderException(MessageCode.BOOK_ID_NOT_FOUND);
         });
-        fileService.deleteFile(book.getFileUrl());
-        fileService.deleteFile(book.getCoverImageUrl());
-        book.setFileUrl(fileService.uploadFile(updateBookParam.getFileBook()));
-        book.setCoverImageUrl(fileService.uploadFile(updateBookParam.getFileCoverImage()));
+        if (updateBookParam.getFileBook() != null) {
+            fileService.deleteFile(book.getFileUrl());
+            book.setFileUrl(fileService.uploadFile(updateBookParam.getFileBook()));
+        }
+        if (updateBookParam.getFileCoverImage() != null) {
+            fileService.deleteFile(book.getCoverImageUrl());
+            book.setCoverImageUrl(fileService.uploadFile(updateBookParam.getFileCoverImage()));
+        }
         book.setTitle(updateBookParam.getTitle());
         book.setDescription(updateBookParam.getDesc());
         book.setRating(updateBookParam.getRating());
@@ -121,6 +123,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new EReaderException("adsf"));
         List<Comment> comments = commentRepository.findAllByBookId(bookId);
         List<Collection> collections = collectionRepository.findAllByUserIdAndBookId(userId, bookId);
+        List<Tag> tags = tagRepository.findAllByBookId(bookId);
         BookDetail bookDetail = BookDetail.builder()
                 .comments(comments)
                 .coverImageUrl(book.getCoverImageUrl())
@@ -133,11 +136,39 @@ public class BookServiceImpl implements BookService {
                 .totalPage(book.getTotalPage())
                 .isFavorite(false)
                 .collections(collections)
+                .tags(tags)
                 .build();
         Optional<Favorite> favorite = favoriteRepository.findByUserIdAndBookId(userId, bookId);
         if (favorite.isPresent()) {
             bookDetail.setFavorite(true);
         }
         return bookDetail;
+    }
+
+    @Override
+    public List<Book> getBooksByCollectionIds(List<Long> collectionIds, Pagination pagination) {
+        if (collectionIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        int page = pagination.getPage();
+        int pageSize = pagination.getPageSize();
+        int offset = (page - 1) * pageSize;
+
+        List<Book> books = bookRepository.findBooksByCollectionIds(
+                collectionIds,
+                pageSize,
+                offset
+        );
+        long totalBooks = bookRepository.countByCollectionIds(collectionIds);
+        pagination.setTotal((int) Math.ceil((double) totalBooks / pageSize));
+
+        return books;
+    }
+
+    @Override
+    public List<Book> getBooksByAuthorId(Long authorId) {
+        List<Book> books = bookRepository.findBooksByAuthorId(authorId);
+        return books;
     }
 }

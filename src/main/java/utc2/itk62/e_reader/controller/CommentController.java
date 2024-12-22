@@ -7,11 +7,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
 import utc2.itk62.e_reader.domain.entity.Comment;
+import utc2.itk62.e_reader.domain.model.CommentFilter;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
+import utc2.itk62.e_reader.dto.RequestFilter;
 import utc2.itk62.e_reader.dto.comment.CreateCommentRequest;
 import utc2.itk62.e_reader.dto.comment.UpdateCommentRequest;
 import utc2.itk62.e_reader.service.CommentService;
 
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -55,9 +58,12 @@ public class CommentController {
         return HTTPResponse.success(message);
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<HTTPResponse> getCommentByUser(Authentication authentication) {
+    @GetMapping("filter")
+    public ResponseEntity<HTTPResponse> getCommentByUser(@RequestBody RequestFilter<CommentFilter> filter, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
-        return HTTPResponse.success(commentService.getCommentByUser(tokenPayload.getUserId()));
+        filter.getFilter().setUserId(tokenPayload.getUserId());
+        List<Comment> resp = commentService.
+                getCommentByUser(filter.getFilter(), filter.getOrderBy(), filter.getPagination());
+        return HTTPResponse.success("Comment retrieved successfully", resp, filter.getPagination());
     }
 }

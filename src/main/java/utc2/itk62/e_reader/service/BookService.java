@@ -23,4 +23,8 @@ public interface BookService {
     List<Book> getAllBook(BookFilter bookFilter, OrderBy orderBy, Pagination pagination);
 
     BookDetail getBookDetail(long bookId, long userId);
+
+    List<Book> getBooksByCollectionIds(List<Long> collectionIds, Pagination pagination);
+
+    List<Book> getBooksByAuthorId(Long authorId);
 }

@@ -1,10 +1,10 @@
-package utc2.itk62.e_reader.dto.bookcollection;
+package utc2.itk62.e_reader.dto.book_collection;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class CreateBookCollectionRequest {
+public class DeleteBookCollectionRequest {
     @NotNull
     private Long collectionId;
     @NotNull
