@@ -48,7 +48,7 @@ public class BookCollectionServiceImpl implements BookCollectionService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<BookCollection> pageBookCollections = bookCollectionRepository.findAll(spec, pageable);
-        pagination.setTotal(pageBookCollections.getTotalPages());
+        pagination.setTotal(pageBookCollections.getTotalElements());
         return pageBookCollections.toList();
     }
 

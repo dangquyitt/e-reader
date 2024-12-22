@@ -49,7 +49,7 @@ public class TagServiceImpl implements TagService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Tag> tagPage = tagRepository.findAll(spec, pageable);
-        pagination.setTotal(tagPage.getTotalPages());
+        pagination.setTotal(tagPage.getTotalElements());
         return tagPage.toList();
     }
 }

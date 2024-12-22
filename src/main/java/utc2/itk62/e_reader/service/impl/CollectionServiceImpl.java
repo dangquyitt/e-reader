@@ -66,7 +66,7 @@ public class CollectionServiceImpl implements CollectionService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Collection> pageCollection = collectionRepository.findAll(spec, pageable);
-        pagination.setTotal(pageCollection.getTotalPages());
+        pagination.setTotal(pageCollection.getTotalElements());
         return pageCollection.toList();
     }
 

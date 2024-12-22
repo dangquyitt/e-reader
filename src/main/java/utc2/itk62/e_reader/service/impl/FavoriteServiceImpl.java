@@ -52,7 +52,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Favorite> pageFavorites = favoriteRepository.findAll(spec, pageable);
-        pagination.setTotal(pageFavorites.getTotalPages());
+        pagination.setTotal(pageFavorites.getTotalElements());
         return pageFavorites.toList();
     }
 
@@ -71,7 +71,7 @@ public class FavoriteServiceImpl implements FavoriteService {
             log.error("favorite {} not belong to user {}", favoriteId, userId);
             throw new EReaderException("favorite not belong to user");
         }
-        
+
         favoriteRepository.delete(favorite);
     }
 }

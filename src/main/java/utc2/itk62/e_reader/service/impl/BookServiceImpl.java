@@ -127,7 +127,7 @@ public class BookServiceImpl implements BookService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Book> pageBooks = bookRepository.findAll(spec, pageable);
-        pagination.setTotal(pageBooks.getTotalPages());
+        pagination.setTotal(pageBooks.getTotalElements());
         return pageBooks.toList();
     }
 

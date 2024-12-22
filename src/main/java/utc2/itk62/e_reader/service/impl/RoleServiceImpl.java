@@ -66,7 +66,7 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getAllRole(RoleFilter filter, Pagination pagination) {
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Role> roles = roleRepository.findAll(pageable);
-        pagination.setTotal(roles.getTotalPages());
+        pagination.setTotal(roles.getTotalElements());
         return roles.toList();
     }
 

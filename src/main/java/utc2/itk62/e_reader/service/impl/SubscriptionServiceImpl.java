@@ -67,7 +67,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize(), sort);
         Page<Subscription> pageSubscriptions = subscriptionRepository.findAll(spec, pageable);
-        pagination.setTotal(pageSubscriptions.getTotalPages());
+        pagination.setTotal(pageSubscriptions.getTotalElements());
         return pageSubscriptions.toList();
     }
 

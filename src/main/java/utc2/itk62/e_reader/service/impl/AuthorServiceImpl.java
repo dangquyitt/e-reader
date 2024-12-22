@@ -78,7 +78,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Author> authorPage = authorRepository.findAll(spec, pageable);
-        pagination.setTotal(authorPage.getTotalPages());
+        pagination.setTotal(authorPage.getTotalElements());
         return authorPage.toList();
     }
 

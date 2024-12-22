@@ -9,5 +9,5 @@ public class Pagination {
     private int pageSize;
     private int nextPage;
     private int prevPage;
-    private int total;
+    private long total;
 }
