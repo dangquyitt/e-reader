@@ -27,8 +27,15 @@ public class CommentController {
     private final MessageSource messageSource;
 
 
+    @GetMapping("/{id}")
+    public ResponseEntity<HTTPResponse> getComment(@PathVariable Long id, Authentication authentication) {
+        TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
+        Comment comment = commentService.getCommentById(tokenPayload.getUserId(), id);
+        return HTTPResponse.success("success", comment);
+    }
+
     @PostMapping
-    public ResponseEntity<HTTPResponse> create(@ModelAttribute CreateCommentRequest request, Locale locale, Authentication authentication) {
+    public ResponseEntity<HTTPResponse> create(@RequestBody CreateCommentRequest request, Locale locale, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
 
         Comment comment = commentService.createComment(tokenPayload.getUserId(), request.getBookId(), request.getContent());
@@ -38,7 +45,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HTTPResponse> update(@ModelAttribute UpdateCommentRequest request, Locale locale, Authentication authentication) {
+    public ResponseEntity<HTTPResponse> update(@RequestBody UpdateCommentRequest request, Locale locale, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
 
         Comment comment = commentService.updateComment(tokenPayload.getUserId(), request.getId(), request.getContent());

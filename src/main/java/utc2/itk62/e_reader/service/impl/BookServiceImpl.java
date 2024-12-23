@@ -1,5 +1,9 @@
 package utc2.itk62.e_reader.service.impl;
 
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.pagination.Pagination;
 import utc2.itk62.e_reader.domain.entity.*;
+import utc2.itk62.e_reader.domain.entity.Collection;
 import utc2.itk62.e_reader.domain.model.BookFilter;
 import utc2.itk62.e_reader.domain.model.CreateBookParam;
 import utc2.itk62.e_reader.domain.model.OrderBy;
@@ -23,10 +28,7 @@ import utc2.itk62.e_reader.repository.*;
 import utc2.itk62.e_reader.service.BookService;
 import utc2.itk62.e_reader.service.FileService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -39,8 +41,11 @@ public class BookServiceImpl implements BookService {
     private final CollectionRepository collectionRepository;
     private final TagRepository tagRepository;
     private final BookTagRepository bookTagRepository;
+    private final AuthorRepository authorRepository;
+    private final BookAuthorRepository bookAuthorRepository;
 
     @Override
+    @Transactional
     public Book createBook(CreateBookParam createBookParam) {
 
         Book book = Book.builder()
@@ -61,6 +66,16 @@ public class BookServiceImpl implements BookService {
                 return bookTag;
             }).toList();
             bookTagRepository.saveAll(bookTags);
+        }
+
+        if (createBookParam.getAuthorIds() != null && !createBookParam.getAuthorIds().isEmpty()) {
+            List<BookAuthor> bookAuthors = createBookParam.getAuthorIds().stream().map(authorId -> {
+                BookAuthor bookAuthor = new BookAuthor();
+                bookAuthor.setBookId(book.getId());
+                bookAuthor.setAuthorId(authorId);
+                return bookAuthor;
+            }).toList();
+            bookAuthorRepository.saveAll(bookAuthors);
         }
 
         return book;
@@ -93,7 +108,7 @@ public class BookServiceImpl implements BookService {
             book.setCoverImageUrl(fileService.uploadFile(updateBookParam.getFileCoverImage()));
         }
         book.setTitle(updateBookParam.getTitle());
-        book.setDescription(updateBookParam.getDesc());
+        book.setDescription(updateBookParam.getDescription());
         book.setRating(updateBookParam.getRating());
         book.setPublishedYear(updateBookParam.getPublishedYear());
         book.setTotalPage(updateBookParam.getTotalPage());
@@ -115,18 +130,49 @@ public class BookServiceImpl implements BookService {
         if (!CollectionUtils.isEmpty(filter.getIds())) {
             spec = spec.and(((root, query, cb) -> root.get("id").in(filter.getIds())));
         }
+
         if (filter.getTitle() != null) {
             String titlePattern = "%" + filter.getTitle() + "%";
             spec = spec.and(((root, query, cb) -> cb.like(root.get("title"), titlePattern)));
         }
 
-        Sort sort = null;
-//        if (orderBy != null) {
-//            Sort.Direction direction = orderBy.getOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-//            sort = Sort.by(direction, orderBy.getField());
-//        }
+        if (filter.getTagIds() != null && !filter.getTagIds().isEmpty()) {
+            spec = spec.and((root, query, cb) -> {
+                Subquery<Long> subquery = query.subquery(Long.class);
+                Root<BookTag> bookTagRoot = subquery.from(BookTag.class);
+                subquery.select(bookTagRoot.get("bookId"))
+                        .where(cb.in(bookTagRoot.get("tagId")).value(filter.getTagIds()));
+                return cb.in(root.get("id")).value(subquery);
+            });
+        }
 
-        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
+        if (filter.getCollectionIds() != null && !filter.getCollectionIds().isEmpty()) {
+            spec = spec.and((root, query, cb) -> {
+                Subquery<Long> subquery = query.subquery(Long.class);
+                Root<BookCollection> bookCollectionRoot = subquery.from(BookCollection.class);
+                subquery.select(bookCollectionRoot.get("bookId"))
+                        .where(cb.in(bookCollectionRoot.get("collectionId")).value(filter.getCollectionIds()));
+                return cb.in(root.get("id")).value(subquery);
+            });
+        }
+
+        if (filter.getAuthorIds() != null && !filter.getAuthorIds().isEmpty()) {
+            spec = spec.and((root, query, cb) -> {
+                Subquery<Long> subquery = query.subquery(Long.class);
+                Root<BookAuthor> bookAuthorRoot = subquery.from(BookAuthor.class);
+                subquery.select(bookAuthorRoot.get("bookId"))
+                        .where(cb.in(bookAuthorRoot.get("authorId")).value(filter.getAuthorIds()));
+                return cb.in(root.get("id")).value(subquery);
+            });
+        }
+
+        Sort sort = null;
+        if (orderBy != null) {
+            Sort.Direction direction = orderBy.getOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            sort = Sort.by(direction, orderBy.getField());
+        }
+
+        Pageable pageable = sort != null ? PageRequest.of(pagination.getPage() - 1, pagination.getPageSize(), sort) : PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Book> pageBooks = bookRepository.findAll(spec, pageable);
         pagination.setTotal(pageBooks.getTotalElements());
         return pageBooks.toList();

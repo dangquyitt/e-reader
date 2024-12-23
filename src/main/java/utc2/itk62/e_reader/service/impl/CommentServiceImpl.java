@@ -64,4 +64,10 @@ public class CommentServiceImpl implements CommentService {
         pagination.setTotal(commentPage.getTotalElements());
         return commentPage.toList();
     }
+
+    @Override
+    public Comment getCommentById(Long userId, Long commentId) {
+        Comment comment = commentRepository.findByIdAndUserId(commentId, userId).orElseThrow(() -> new EReaderException("not found comment Id"));
+        return comment;
+    }
 }

@@ -52,7 +52,7 @@ public class BookController {
                 .fileBook(request.getFileBook())
                 .fileCoverImage(request.getFileCoverImage())
                 .title(request.getTitle())
-                .desc(request.getDesc())
+                .description(request.getDesc())
                 .totalPage(request.getTotalPage())
                 .rating(request.getRating())
                 .publishedYear(request.getPublishedYear())

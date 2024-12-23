@@ -18,4 +18,5 @@ public interface CommentService {
 
     List<Comment> getCommentByUser(CommentFilter commentFilter, OrderBy orderBy, Pagination pagination);
 
+    Comment getCommentById(Long userId, Long commentId);
 }

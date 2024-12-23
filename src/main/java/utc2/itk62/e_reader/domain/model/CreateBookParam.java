@@ -16,4 +16,5 @@ public class CreateBookParam {
     private int totalPage;
     private int publishedYear;
     private List<Long> tagIds;
+    private List<Long> authorIds;
 }

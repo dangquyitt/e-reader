@@ -26,10 +26,10 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<HTTPResponse> create(@RequestBody CreateAuthorRequest request, Locale locale) {
-        Author author = authorService.createAuthor(request.getAuthorName());
+        Author author = authorService.createAuthor(request.getName());
         AuthorResponse authorResponse = AuthorResponse.builder()
                 .id(author.getId())
-                .authorName(author.getName())
+                .name(author.getName())
                 .build();
 
         String message = messageSource.getMessage("author.created", null, locale);
@@ -41,7 +41,7 @@ public class AuthorController {
         Author author = authorService.updateAuthor(request.getAuthorName(), request.getId());
         AuthorResponse authorResponse = AuthorResponse.builder()
                 .id(author.getId())
-                .authorName(author.getName())
+                .name(author.getName())
                 .build();
 
         String message = messageSource.getMessage("author.update.success", null, locale);
@@ -59,15 +59,15 @@ public class AuthorController {
     }
 
 
-    @GetMapping("/filter")
+    @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getAllAuthor(@RequestBody RequestFilter<AuthorFilter> filter) {
         List<AuthorResponse> authorResponses = authorService.getAllAuthor(filter.getFilter(), filter.getPagination())
                 .stream().map(author -> AuthorResponse.builder()
                         .id(author.getId())
-                        .authorName(author.getName())
+                        .name(author.getName())
                         .build()).collect(Collectors.toList());
 
-        return HTTPResponse.success(authorResponses);
+        return HTTPResponse.success("success", authorResponses, filter.getPagination());
     }
 
     @DeleteMapping("/{id}")
@@ -86,7 +86,7 @@ public class AuthorController {
         Author author = authorService.getAuthorByBookId(id);
         AuthorResponse authorResponse = AuthorResponse.builder()
                 .id(author.getId())
-                .authorName(author.getName())
+                .name(author.getName())
                 .build();
         return HTTPResponse.success(authorResponse);
     }

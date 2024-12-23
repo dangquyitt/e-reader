@@ -54,8 +54,8 @@ public class TagServiceImpl implements TagService {
                     Subquery<Long> subquery = query.subquery(Long.class);
                     Root<BookTag> bookTagRoot = subquery.from(BookTag.class);
                     subquery.select(bookTagRoot.get("tagId"))
-                            .where(cb.notEqual(bookTagRoot.get("bookId"), tagFilter.getBookIdNe()));
-                    return cb.in(root.get("id")).value(subquery);
+                            .where(cb.equal(bookTagRoot.get("bookId"), tagFilter.getBookIdNe()));
+                    return cb.in(root.get("id")).value(subquery).not();
                 });
             }
         }

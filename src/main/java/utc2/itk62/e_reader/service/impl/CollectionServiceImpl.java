@@ -58,8 +58,8 @@ public class CollectionServiceImpl implements CollectionService {
                     Subquery<Long> subquery = query.subquery(Long.class);
                     Root<BookCollection> bookCollectionRoot = subquery.from(BookCollection.class);
                     subquery.select(bookCollectionRoot.get("collectionId"))
-                            .where(cb.notEqual(bookCollectionRoot.get("bookId"), collectionFilter.getBookIdNe()));
-                    return cb.in(root.get("id")).value(subquery);
+                            .where(cb.equal(bookCollectionRoot.get("bookId"), collectionFilter.getBookIdNe()));
+                    return cb.in(root.get("id")).value(subquery).not();
                 });
             }
         }

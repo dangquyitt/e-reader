@@ -11,5 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class BookFilter {
     List<Long> ids;
+    List<Long> collectionIds;
+    List<Long> tagIds;
+    List<Long> authorIds;
     String title;
+    String q;
 }
