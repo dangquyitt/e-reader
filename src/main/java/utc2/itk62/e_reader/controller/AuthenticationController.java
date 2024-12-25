@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import utc2.itk62.e_reader.component.Translator;
 import utc2.itk62.e_reader.constant.MessageCode;
 import utc2.itk62.e_reader.core.response.HTTPResponse;
+import utc2.itk62.e_reader.domain.entity.Role;
 import utc2.itk62.e_reader.domain.entity.User;
 import utc2.itk62.e_reader.domain.model.TokenPayload;
 import utc2.itk62.e_reader.domain.model.UserInfo;
@@ -43,7 +44,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<HTTPResponse> login(@Valid @RequestBody LoginRequest loginRequest, Locale locale) {
         UserInfo userInfo = authenticationService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), userInfo.getId(), userInfo.getRoles());
+        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), userInfo.getId(), userInfo.getRoles().stream().map(Role::getName).toList());
         String token = tokenService.generateAccessToken(tokenPayload);
         return HTTPResponse.success(translator.translate(locale, MessageCode.LOGIN_SUCCESS, userInfo.getEmail()), new LoginResponse(token));
     }
@@ -82,7 +83,7 @@ public class AuthenticationController {
     @PostMapping("/googleLogin")
     public ResponseEntity<HTTPResponse> loginWithGoogle(@Valid @RequestBody GoogleLoginRequest googleLoginRequest, Locale locale) {
         UserInfo userInfo = authenticationService.loginWithGoogle(googleLoginRequest.getIdTokenString());
-        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), userInfo.getId(), userInfo.getRoles());
+        TokenPayload tokenPayload = new TokenPayload(UUID.randomUUID().toString(), userInfo.getId(), userInfo.getRoles().stream().map(Role::getName).toList());
         String token = tokenService.generateAccessToken(tokenPayload);
         return HTTPResponse.success(translator.translate(locale, MessageCode.LOGIN_SUCCESS, userInfo.getEmail()), new LoginResponse(token));
     }

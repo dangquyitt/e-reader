@@ -14,9 +14,9 @@ public class TokenPayload {
     private Long userId;
     private Instant issuedAt;
     private Instant expiredAt;
-    private List<Role> roles;
+    private List<String> roles;
 
-    public TokenPayload(String id, Long userId, List<Role> roles) {
+    public TokenPayload(String id, Long userId, List<String> roles) {
         this.id = id;
         this.userId = userId;
         this.roles = roles;

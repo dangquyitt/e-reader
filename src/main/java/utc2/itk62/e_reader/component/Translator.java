@@ -12,6 +12,10 @@ public class Translator {
     private final MessageSource messageSource;
 
     public String translate(Locale locale, String key, Object... args) {
-        return messageSource.getMessage(key, args, "Please set a message for the key " + key, locale);
+        return messageSource.getMessage(key, args, "Please set a message for the key " + key, Locale.ENGLISH);
+    }
+
+    public String translate(String key, Object... args) {
+        return messageSource.getMessage(key, args, "Please set a message for the key " + key, Locale.ENGLISH);
     }
 }
