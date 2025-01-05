@@ -19,7 +19,7 @@ public interface PriceRepository extends JpaRepository<Price, Long>, JpaSpecific
                         SELECT DISTINCT ON (plan_id) id
                         FROM prices
                         WHERE plan_id IN :planIds
-                        ORDER BY plan_id, effective_date
+                        ORDER BY plan_id, effective_date DESC
                     )
                     """,
             nativeQuery = true
@@ -30,7 +30,7 @@ public interface PriceRepository extends JpaRepository<Price, Long>, JpaSpecific
             value = """
                     SELECT * FROM prices
                     WHERE plan_id = :planId
-                    ORDER BY plan_id, effective_date
+                    ORDER BY plan_id, effective_date DESC
                     LIMIT 1
                     """,
             nativeQuery = true

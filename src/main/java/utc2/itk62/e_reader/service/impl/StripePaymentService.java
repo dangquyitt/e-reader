@@ -20,7 +20,6 @@ import utc2.itk62.e_reader.repository.PlanRepository;
 import utc2.itk62.e_reader.repository.PriceRepository;
 import utc2.itk62.e_reader.repository.SubscriptionRepository;
 import utc2.itk62.e_reader.repository.UserRepository;
-import utc2.itk62.e_reader.service.MailService;
 import utc2.itk62.e_reader.service.PaymentService;
 
 import java.math.BigDecimal;
@@ -50,12 +49,13 @@ public class StripePaymentService implements PaymentService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EReaderException(MessageCode.USER_ID_NOT_FOUND));
         Plan plan = planRepository.findById(planId).orElseThrow(() -> new EReaderException(MessageCode.PLAN_ID_NOT_FOUND));
         Price price = priceRepository.findLatestByPlanId(planId).orElseThrow(() -> new EReaderException(MessageCode.PRICE_LATEST_NOT_FOUND));
+        String productFeatures = String.join(", ", price.getFeatures());
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(CLIENT_URL + "/payments/success")
-                .setCancelUrl(CLIENT_URL + "/payments/cancel")
+                .setSuccessUrl(CLIENT_URL + "/subscriptions?isSuccess=true")
+                .setCancelUrl(CLIENT_URL + "/subscriptions?isSuccess=false")
                 .setCustomerEmail(user.getEmail())
                 .putMetadata("userId", String.valueOf(userId))
                 .putMetadata("planId", String.valueOf(planId))
@@ -68,6 +68,7 @@ public class StripePaymentService implements PaymentService {
                                                 .setUnitAmount(convertToStripeAmount(price.getAmount()))
                                                 .setProductData(
                                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                .setDescription(productFeatures)
                                                                 .setName(plan.getName()).build()
                                                 ).build()
                                 ).build()
