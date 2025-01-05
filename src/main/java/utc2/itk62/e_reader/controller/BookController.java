@@ -87,12 +87,7 @@ public class BookController {
 
         return HTTPResponse.success(message);
     }
-
-    @GetMapping("/{id}/comments")
-    public ResponseEntity<HTTPResponse> getComment(@PathVariable Long id, Authentication authentication) {
-        TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
-        return HTTPResponse.success(bookService.getBookDetail(id, tokenPayload.getUserId()));
-    }
+    
 
     @PostMapping("/collections")
     public ResponseEntity<HTTPResponse> getBookByCollectionIds(@RequestBody RequestFilter<GetBookByCollectionFilter> filter) {
