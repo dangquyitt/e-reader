@@ -107,9 +107,12 @@ public class BookServiceImpl implements BookService {
             fileService.deleteFile(book.getCoverImageUrl());
             book.setCoverImageUrl(fileService.uploadFile(updateBookParam.getFileCoverImage()));
         }
-        book.setTitle(updateBookParam.getTitle());
-        book.setDescription(updateBookParam.getDescription());
-        book.setRating(updateBookParam.getRating());
+        if (updateBookParam.getTitle() != null) {
+            book.setTitle(updateBookParam.getTitle());
+        }
+        if (updateBookParam.getDescription() != null) {
+            book.setDescription(updateBookParam.getDescription());
+        }
         book.setPublishedYear(updateBookParam.getPublishedYear());
         book.setTotalPage(updateBookParam.getTotalPage());
         return bookRepository.save(book);
