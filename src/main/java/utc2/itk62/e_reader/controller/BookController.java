@@ -26,6 +26,11 @@ public class BookController {
     private final BookService bookService;
     private final MessageSource messageSource;
 
+    @GetMapping("/{id}/fileURL")
+    public ResponseEntity<HTTPResponse> getFileURL(@PathVariable Long id) {
+        return HTTPResponse.success("", bookService.getBook(id).getFileUrl());
+    }
+
 
     @PostMapping
     public ResponseEntity<HTTPResponse> create(@ModelAttribute CreateBookRequest request, Locale locale) {

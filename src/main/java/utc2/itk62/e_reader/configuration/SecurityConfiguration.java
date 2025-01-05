@@ -2,6 +2,7 @@ package utc2.itk62.e_reader.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +18,7 @@ import utc2.itk62.e_reader.filter.AuthorizationFilter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfiguration {
-    private static final String[] PUBLIC_ENDPOINTS = {"/api/auth/**", "/api/emailVerifications/**", "/api/payments/webhook"};
+    private static final String[] PUBLIC_ENDPOINTS = {"/api/auth/**", "/api/emailVerifications/**", "/api/payments/**",};
     private final AuthenticationFilter authenticationFilter;
     private final AuthorizationFilter authorizationFilter;
 
@@ -33,6 +34,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         request -> request
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/plans").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(authorizationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -19,7 +19,6 @@ public class BookDetail {
     private Double rating;
     private Integer publishedYear;
     private String coverImageUrl;
-    private String fileUrl;
     private List<Comment> comments;
     @JsonProperty("isFavorite")
     private boolean isFavorite;

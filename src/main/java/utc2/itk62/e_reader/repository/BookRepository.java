@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-
     @Override
     @Query(value = """
                 update Book b set b.deletedAt = CURRENT_TIMESTAMP where b.id = :id

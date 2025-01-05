@@ -41,7 +41,6 @@ public class BookServiceImpl implements BookService {
     private final CollectionRepository collectionRepository;
     private final TagRepository tagRepository;
     private final BookTagRepository bookTagRepository;
-    private final AuthorRepository authorRepository;
     private final BookAuthorRepository bookAuthorRepository;
 
     @Override
@@ -192,7 +191,6 @@ public class BookServiceImpl implements BookService {
                 .coverImageUrl(book.getCoverImageUrl())
                 .id(bookId)
                 .description(book.getDescription())
-                .fileUrl(book.getFileUrl())
                 .publishedYear(book.getPublishedYear())
                 .rating(book.getRating())
                 .title(book.getTitle())

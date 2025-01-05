@@ -11,7 +11,6 @@ import utc2.itk62.e_reader.dto.book.BookDetail;
 import java.util.List;
 
 public interface BookService {
-
     Book createBook(CreateBookParam createBookParam);
 
     boolean deleteBook(Long id);
