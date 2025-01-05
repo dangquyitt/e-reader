@@ -2,6 +2,7 @@ package utc2.itk62.e_reader.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import utc2.itk62.e_reader.domain.entity.Book;
@@ -13,6 +14,13 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
+    @Override
+    @Query(value = """
+                update Book b set b.deletedAt = CURRENT_TIMESTAMP where b.id = :id
+            """)
+    @Modifying
+    void deleteById(Long id);
+
     @Query("SELECT b FROM Book b WHERE b.id = (SELECT r.bookId FROM Rating r WHERE r.id = :ratingId)")
     Optional<Book> findBookByRatingId(Long ratingId);
 
@@ -23,7 +31,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
                     INNER JOIN book_collections bc ON b.id = bc.book_id
                     WHERE bc.collection_id IN :collectionIds
                     LIMIT :limit OFFSET :offset
-                         """,
+                    """,
             nativeQuery = true
 
     )
@@ -46,7 +54,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
                     FROM books b
                     INNER JOIN book_author ba ON b.id = ba.book_id
                     WHERE ba.author_id IN :authorId
-                         """,
+                    """,
             nativeQuery = true
 
     )

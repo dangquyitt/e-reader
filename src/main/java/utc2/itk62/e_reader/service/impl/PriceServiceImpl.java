@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import utc2.itk62.e_reader.core.pagination.Pagination;
@@ -13,6 +14,7 @@ import utc2.itk62.e_reader.domain.entity.BookCollection;
 import utc2.itk62.e_reader.domain.entity.Collection;
 import utc2.itk62.e_reader.domain.entity.Plan;
 import utc2.itk62.e_reader.domain.entity.Price;
+import utc2.itk62.e_reader.domain.model.OrderBy;
 import utc2.itk62.e_reader.domain.model.PriceFilter;
 import utc2.itk62.e_reader.dto.price.CreatePriceRequest;
 import utc2.itk62.e_reader.exception.EReaderException;
@@ -45,17 +47,24 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public List<Price> getListPrice(PriceFilter filter, Pagination pagination) {
+    public List<Price> getListPrice(PriceFilter filter, OrderBy orderBy, Pagination pagination) {
         Specification<Price> spec = Specification.where(null);
 
         if (filter != null) {
-            if (filter.getPlanId() != null) {
-                spec = spec.and(((root, query, criteriaBuilder) -> criteriaBuilder.
-                        equal(root.get("planId"), filter.getPlanId())));
+            if (filter.getPlanIds() != null) {
+                spec = spec.and((root, query, cb) ->
+                        cb.in(root.get("planId")).value(filter.getPlanIds())
+                );
             }
         }
 
-        Pageable pageable = PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
+        Sort sort = null;
+        if (orderBy != null) {
+            Sort.Direction direction = orderBy.getOrder().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            sort = Sort.by(direction, orderBy.getField());
+        }
+
+        Pageable pageable = sort != null ? PageRequest.of(pagination.getPage() - 1, pagination.getPageSize(), sort) : PageRequest.of(pagination.getPage() - 1, pagination.getPageSize());
         Page<Price> pagePrice = priceRepository.findAll(spec, pageable);
         pagination.setTotal(pagePrice.getTotalElements());
         return pagePrice.toList();

@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.Instant;
 
 @Builder
 @AllArgsConstructor
@@ -12,6 +17,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Setter
 @Entity
 @Table(name = "books", schema = "public")
+@SQLRestriction("deleted_at IS NULL")
 @AttributeOverrides({
         @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)),
         @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
@@ -46,4 +52,6 @@ public class Book extends BaseEntity {
     @Column(name = "file_url", nullable = false, length = Integer.MAX_VALUE)
     private String fileUrl;
 
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
 }

@@ -25,7 +25,7 @@ public class PriceController {
 
     @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getAllPrices(@RequestBody RequestFilter<PriceFilter> filter) {
-        List<Price> prices = priceService.getListPrice(filter.getFilter(), filter.getPagination());
+        List<Price> prices = priceService.getListPrice(filter.getFilter(), filter.getOrderBy(), filter.getPagination());
         return HTTPResponse.success("success", prices, filter.getPagination());
     }
 }
