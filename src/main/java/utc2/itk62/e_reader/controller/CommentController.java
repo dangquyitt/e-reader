@@ -64,7 +64,7 @@ public class CommentController {
         return HTTPResponse.success(message);
     }
 
-    @PostMapping("filter")
+    @PostMapping("/filter")
     public ResponseEntity<HTTPResponse> getCommentByUser(@RequestBody RequestFilter<CommentFilter> filter, Authentication authentication) {
         TokenPayload tokenPayload = (TokenPayload) authentication.getPrincipal();
         filter.getFilter().setUserId(tokenPayload.getUserId());
