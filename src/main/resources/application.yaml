@@ -5,7 +5,12 @@ spring:
     hibernate:
       ddl-auto: none
 
-
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 100MB
+  
+  
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/e-reader
